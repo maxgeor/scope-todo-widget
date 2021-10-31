@@ -1,53 +1,10 @@
 const { widget } = figma;
-const { useSyncedState, usePropertyMenu, AutoLayout, Text, SVG, Rectangle } = widget;
+const { useSyncedState, AutoLayout, Text, SVG, Rectangle } = widget;
 function ScopedTodoCard() {
-    const [todos, setTodos] = useSyncedState('todos', [
-        {
-            title: "Get Groceries",
-            done: true,
-            outOfScope: false,
-        },
-        {
-            title: "Find a taco",
-            done: false,
-            outOfScope: false,
-        },
-        {
-            title: "Get kfnvldkfnvlkdf",
-            done: true,
-            outOfScope: false,
-        },
-        {
-            title: "Finish the second part",
-            done: false,
-            outOfScope: false,
-        },
-        {
-            title: "Work with the API",
-            done: false,
-            outOfScope: true,
-        }
-    ]);
-    usePropertyMenu([
-        {
-            tooltip: "Add a todo",
-            propertyName: "Add a todo",
-            itemType: "action"
-        },
-    ], () => {
-        const prevTodos = todos;
-        setTodos([
-            {
-                title: "New todo",
-                done: false,
-                outOfScope: false
-            },
-            ...prevTodos
-        ]);
-    });
+    const [todos, setTodos] = useSyncedState('todos', []);
     const Todo = ({ title, done, outOfScope }) => {
-        return (figma.widget.h(AutoLayout, { direction: 'horizontal', spacing: 'auto', width: 375 },
-            figma.widget.h(AutoLayout, { spacing: 8 },
+        return (figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 'auto', width: 375 },
+            figma.widget.h(AutoLayout, { spacing: 8, verticalAlignItems: 'center', direction: 'horizontal' },
                 figma.widget.h(AutoLayout, { hidden: done || outOfScope ? true : false, width: 20, height: 20, verticalAlignItems: 'center', horizontalAlignItems: 'center' },
                     figma.widget.h(Rectangle, { width: 16, height: 16, fill: '#FFF', stroke: '#BABABA', strokeWidth: 1, cornerRadius: 4 })),
                 figma.widget.h(SVG, { hidden: done === false || outOfScope ? true : false, src: `
@@ -62,16 +19,30 @@ function ScopedTodoCard() {
             </svg>
           ` })));
     };
+    const notDoneTodos = todos.filter(todo => !todo.done && !todo.outOfScope)
+        .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }));
+    const doneTodos = todos.filter(todo => todo.done && !todo.outOfScope)
+        .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }));
+    const outOfScopeTodos = todos.filter(todo => todo.outOfScope)
+        .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }));
     return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fafafa', stroke: '#E5E5E5', strokeWidth: 1 },
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 16, padding: 24 },
-            figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8 }, todos
-                .filter(todo => !todo.done && !todo.outOfScope)
-                .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }))),
-            figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8 }, todos
-                .filter(todo => todo.done && !todo.outOfScope)
-                .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))),
-        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8, padding: 24, fill: '#ebebeb' }, todos
-            .filter(todo => todo.outOfScope)
-            .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))));
+            figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8 },
+                notDoneTodos.length > 0 && notDoneTodos,
+                figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 8, onClick: () => setTodos([
+                        ...todos,
+                        {
+                            title: "New todo",
+                            done: false,
+                            outOfScope: false
+                        }
+                    ]) },
+                    figma.widget.h(SVG, { src: `
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="#8f8f8f" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM11 7C11 6.44772 10.5523 6 10 6C9.44772 6 9 6.44772 9 7V9H7C6.44772 9 6 9.44772 6 10C6 10.5523 6.44772 11 7 11H9V13C9 13.5523 9.44772 14 10 14C10.5523 14 11 13.5523 11 13V11H13C13.5523 11 14 10.5523 14 10C14 9.44772 13.5523 9 13 9H11V7Z"/>
+              </svg>` }),
+                    figma.widget.h(Text, { fill: '#646464' }, "Add a todo"))),
+            figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8, height: !doneTodos.length && 32 }, doneTodos)),
+        figma.widget.h(AutoLayout, { direction: 'vertical', horizontalAlignItems: 'center', spacing: 8, padding: 24, fill: '#ebebeb' }, outOfScopeTodos.length === 0 ? figma.widget.h(Rectangle, { width: 375, height: 16, fill: '#ebebeb' }) : outOfScopeTodos)));
 }
 widget.register(ScopedTodoCard);
