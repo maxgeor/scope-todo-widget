@@ -82,7 +82,7 @@ function ScopedTodoCard() {
     <AutoLayout
       direction={'vertical'}
       cornerRadius={8}
-      fill={'#fff'}
+      fill={'#fafafa'}
       stroke={'#E5E5E5'}
       strokeWidth={1}
     >
@@ -122,12 +122,25 @@ function ScopedTodoCard() {
             )
           }
         </AutoLayout>
+        <AutoLayout 
+          fill={'#fff'} 
+          stroke={'#ddd'} 
+          strokeWidth={1} 
+          height={32} 
+          width={100} 
+          cornerRadius={20} 
+          verticalAlignItems={'center'} 
+          horizontalAlignItems={'center'}
+          // onClick={}
+        > 
+          <Text fontSize={13}>Add a todo</Text>
+        </AutoLayout>
       </AutoLayout>
       <AutoLayout
         direction={'vertical'}
         spacing={12}
         padding={24}
-        fill={'#EAEAEA'}
+        fill={'#ebebeb'}
       >
         {todos
           .filter(todo => todo.outOfScope)

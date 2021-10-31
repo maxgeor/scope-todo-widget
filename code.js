@@ -40,15 +40,17 @@ function ScopedTodoCard() {
             </svg>
           ` })));
     };
-    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', stroke: '#E5E5E5', strokeWidth: 1 },
+    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fafafa', stroke: '#E5E5E5', strokeWidth: 1 },
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24 },
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12 }, todos
                 .filter(todo => !todo.done && !todo.outOfScope)
                 .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }))),
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12 }, todos
                 .filter(todo => todo.done && !todo.outOfScope)
-                .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))),
-        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12, padding: 24, fill: '#EAEAEA' }, todos
+                .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }))),
+            figma.widget.h(AutoLayout, { fill: '#fff', stroke: '#ddd', strokeWidth: 1, height: 32, width: 100, cornerRadius: 20, verticalAlignItems: 'center', horizontalAlignItems: 'center' },
+                figma.widget.h(Text, { fontSize: 13 }, "Add a todo"))),
+        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12, padding: 24, fill: '#ebebeb' }, todos
             .filter(todo => todo.outOfScope)
             .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))));
 }
