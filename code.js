@@ -55,14 +55,14 @@ function ScopedTodoCard() {
           ` })));
     };
     return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fafafa', stroke: '#E5E5E5', strokeWidth: 1 },
-        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24 },
-            figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12 }, todos
+        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 16, padding: 24 },
+            figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8 }, todos
                 .filter(todo => !todo.done && !todo.outOfScope)
                 .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }))),
-            figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12 }, todos
+            figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8 }, todos
                 .filter(todo => todo.done && !todo.outOfScope)
                 .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))),
-        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12, padding: 24, fill: '#ebebeb' }, todos
+        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8, padding: 24, fill: '#ebebeb' }, todos
             .filter(todo => todo.outOfScope)
             .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))));
 }

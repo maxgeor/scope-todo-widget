@@ -107,12 +107,12 @@ function ScopedTodoCard() {
 
       <AutoLayout
       direction={'vertical'}
-        spacing={24}
+        spacing={16}
         padding={24}
       >
         <AutoLayout
           direction={'vertical'}
-          spacing={12}
+          spacing={8}
         >
           {todos
             .filter(todo => !todo.done && !todo.outOfScope)
@@ -124,23 +124,10 @@ function ScopedTodoCard() {
               />
             )
           }
-          {/* <AutoLayout 
-          fill={'#fff'} 
-          stroke={'#ddd'} 
-          strokeWidth={1} 
-          height={32} 
-          width={100} 
-          cornerRadius={20} 
-          verticalAlignItems={'center'} 
-          horizontalAlignItems={'center'}
-          // onClick={}
-        > 
-          <Text fontSize={13}>Add a todo</Text>
-        </AutoLayout> */}
         </AutoLayout>
         <AutoLayout
           direction={'vertical'}
-          spacing={12}
+          spacing={8}
         >
           {todos
             .filter(todo => todo.done && !todo.outOfScope)
@@ -156,7 +143,7 @@ function ScopedTodoCard() {
       </AutoLayout>
       <AutoLayout
         direction={'vertical'}
-        spacing={12}
+        spacing={8}
         padding={24}
         fill={'#ebebeb'}
       >
