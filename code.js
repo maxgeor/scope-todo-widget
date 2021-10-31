@@ -1,7 +1,13 @@
 const { widget } = figma;
 const { useSyncedState, AutoLayout, Text, SVG, Rectangle } = widget;
 function ScopedTodoCard() {
-    const [todos, setTodos] = useSyncedState('todos', []);
+    const [todos, setTodos] = useSyncedState('todos', [
+        {
+            title: 'findinddbnvifnv',
+            done: true,
+            outOfScope: false
+        }
+    ]);
     const Todo = ({ title, done, outOfScope }) => {
         return (figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 'auto', width: 375 },
             figma.widget.h(AutoLayout, { spacing: 8, verticalAlignItems: 'center', direction: 'horizontal' },
@@ -26,7 +32,7 @@ function ScopedTodoCard() {
     const outOfScopeTodos = todos.filter(todo => todo.outOfScope)
         .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }));
     return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fafafa', stroke: '#E5E5E5', strokeWidth: 1 },
-        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 16, padding: 24 },
+        figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24 },
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8 },
                 notDoneTodos.length > 0 && notDoneTodos,
                 figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 8, onClick: () => setTodos([
@@ -38,10 +44,10 @@ function ScopedTodoCard() {
                         }
                     ]) },
                     figma.widget.h(SVG, { src: `
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#8f8f8f">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="#8f8f8f">
+              <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>` }),
-                    figma.widget.h(Text, { fill: '#666' }, "Add a todo"))),
+                    figma.widget.h(Text, { fill: '#7C7C7C', fontWeight: 600, fontSize: 15 }, "Add a todo"))),
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8, height: !doneTodos.length && 32 }, doneTodos)),
         figma.widget.h(AutoLayout, { direction: 'vertical', horizontalAlignItems: 'center', spacing: 8, padding: 24, fill: '#ebebeb' }, outOfScopeTodos.length === 0 ? figma.widget.h(Rectangle, { width: 375, height: 16, fill: '#ebebeb' }) : outOfScopeTodos)));
 }

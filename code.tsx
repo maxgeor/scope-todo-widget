@@ -2,7 +2,13 @@ const { widget } = figma
 const { useSyncedState, AutoLayout, Text, SVG, Rectangle } = widget
 
 function ScopedTodoCard() {
-  const [todos, setTodos] = useSyncedState('todos', [])
+  const [todos, setTodos] = useSyncedState('todos', [
+    {
+      title: 'findinddbnvifnv',
+      done: true,
+      outOfScope: false
+    }
+  ])
 
   const Todo = ({title, done, outOfScope}) => {
     return (
@@ -102,7 +108,7 @@ function ScopedTodoCard() {
 
       <AutoLayout
         direction={'vertical'}
-        spacing={16}
+        spacing={24}
         padding={24}
       >
         <AutoLayout
@@ -124,11 +130,11 @@ function ScopedTodoCard() {
             ])}
           >
             <SVG src={`
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#8f8f8f">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="#8f8f8f">
+              <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>`}
             />
-            <Text fill={'#666'}>Add a todo</Text>
+            <Text fill={'#7C7C7C'} fontWeight={600} fontSize={15}>Add a todo</Text>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout
