@@ -38,8 +38,16 @@ function ScopedTodoCard() {
         itemType: "action"
       },
     ],
-    (e) => {
-      console.log(e.propertyName)
+    () => {
+      const prevTodos = todos
+      setTodos([
+        {
+          title: "New todo",
+          done: false,
+          outOfScope: false
+        },
+        ...prevTodos
+      ])
     }
   )
 

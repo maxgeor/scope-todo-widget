@@ -34,8 +34,16 @@ function ScopedTodoCard() {
             propertyName: "Add a todo",
             itemType: "action"
         },
-    ], (e) => {
-        console.log(e.propertyName);
+    ], () => {
+        const prevTodos = todos;
+        setTodos([
+            {
+                title: "New todo",
+                done: false,
+                outOfScope: false
+            },
+            ...prevTodos
+        ]);
     });
     const Todo = ({ title, done, outOfScope }) => {
         return (figma.widget.h(AutoLayout, { direction: 'horizontal', spacing: 'auto', width: 375 },
