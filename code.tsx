@@ -1,11 +1,16 @@
 const { widget } = figma
-const { useSyncedState, AutoLayout, Text, SVG, Rectangle } = widget
+const { useSyncedState, usePropertyMenu, AutoLayout, Text, SVG, Rectangle } = widget
 
 function ScopedTodoCard() {
   const [todos, setTodos] = useSyncedState('todos', [
     {
       title: "Get Groceries",
       done: true,
+      outOfScope: false,
+    },
+    {
+      title: "Find a taco",
+      done: false,
       outOfScope: false,
     },
     {
@@ -24,6 +29,19 @@ function ScopedTodoCard() {
       outOfScope: true,
     }
   ])
+
+  usePropertyMenu(
+    [
+      {
+        tooltip: "Add a todo",
+        propertyName: "Add a todo",
+        itemType: "action"
+      },
+    ],
+    (e) => {
+      console.log(e.propertyName)
+    }
+  )
 
   const Todo = ({title, done, outOfScope}) => {
     return (
@@ -106,6 +124,19 @@ function ScopedTodoCard() {
               />
             )
           }
+          {/* <AutoLayout 
+          fill={'#fff'} 
+          stroke={'#ddd'} 
+          strokeWidth={1} 
+          height={32} 
+          width={100} 
+          cornerRadius={20} 
+          verticalAlignItems={'center'} 
+          horizontalAlignItems={'center'}
+          // onClick={}
+        > 
+          <Text fontSize={13}>Add a todo</Text>
+        </AutoLayout> */}
         </AutoLayout>
         <AutoLayout
           direction={'vertical'}
@@ -121,19 +152,6 @@ function ScopedTodoCard() {
               />
             )
           }
-        </AutoLayout>
-        <AutoLayout 
-          fill={'#fff'} 
-          stroke={'#ddd'} 
-          strokeWidth={1} 
-          height={32} 
-          width={100} 
-          cornerRadius={20} 
-          verticalAlignItems={'center'} 
-          horizontalAlignItems={'center'}
-          // onClick={}
-        > 
-          <Text fontSize={13}>Add a todo</Text>
         </AutoLayout>
       </AutoLayout>
       <AutoLayout

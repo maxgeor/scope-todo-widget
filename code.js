@@ -1,10 +1,15 @@
 const { widget } = figma;
-const { useSyncedState, AutoLayout, Text, SVG, Rectangle } = widget;
+const { useSyncedState, usePropertyMenu, AutoLayout, Text, SVG, Rectangle } = widget;
 function ScopedTodoCard() {
     const [todos, setTodos] = useSyncedState('todos', [
         {
             title: "Get Groceries",
             done: true,
+            outOfScope: false,
+        },
+        {
+            title: "Find a taco",
+            done: false,
             outOfScope: false,
         },
         {
@@ -23,6 +28,15 @@ function ScopedTodoCard() {
             outOfScope: true,
         }
     ]);
+    usePropertyMenu([
+        {
+            tooltip: "Add a todo",
+            propertyName: "Add a todo",
+            itemType: "action"
+        },
+    ], (e) => {
+        console.log(e.propertyName);
+    });
     const Todo = ({ title, done, outOfScope }) => {
         return (figma.widget.h(AutoLayout, { direction: 'horizontal', spacing: 'auto', width: 375 },
             figma.widget.h(AutoLayout, { spacing: 8 },
@@ -47,9 +61,7 @@ function ScopedTodoCard() {
                 .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }))),
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12 }, todos
                 .filter(todo => todo.done && !todo.outOfScope)
-                .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope }))),
-            figma.widget.h(AutoLayout, { fill: '#fff', stroke: '#ddd', strokeWidth: 1, height: 32, width: 100, cornerRadius: 20, verticalAlignItems: 'center', horizontalAlignItems: 'center' },
-                figma.widget.h(Text, { fontSize: 13 }, "Add a todo"))),
+                .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))),
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 12, padding: 24, fill: '#ebebeb' }, todos
             .filter(todo => todo.outOfScope)
             .map(todo => figma.widget.h(Todo, { title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))));
