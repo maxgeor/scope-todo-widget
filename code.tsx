@@ -6,20 +6,45 @@ const { useSyncedState, useEffect, AutoLayout, Text, SVG, Rectangle } = widget
 
 function ScopedTodoCard() {
   const [todos, setTodos] = useSyncedState('todos', [
-    // {
-    //   title: 'odjfvkjdbfvkjdbkdf',
-    //   done: true,
-    //   outOfScope: true,
-    // },
     {
-      title: 'When you click the checkbox, it changes that todos “Done” state to true',
+      title: 'Open menue with edit, delete, and move options',
       done: false,
       outOfScope: false,
     },
     {
-      title: 'Find a way to fix the sink without messing it up',
+      title: 'When clicking edit option, you can change the text',
+      done: false,
+      outOfScope: false,
+    },
+    {
+      title: 'Clicking delte will remove the todo',
+      done: false,
+      outOfScope: false,
+    },
+    {
+      title: 'Wrap text on overflow',
       done: true,
       outOfScope: false,
+    },
+    {
+      title: 'Remove big space below notDoneTodos seciton when there aren’t hany completed todos',
+      done: true,
+      outOfScope: false,
+    },
+    {
+      title: 'When you click the checkbox, it changes that todos “Done” state',
+      done: true,
+      outOfScope: false,
+    },
+    {
+      title: "Paste text to create todos",
+      done: true,
+      outOfScope: true,
+    },
+    {
+      title: "Paste text to create todos",
+      done: true,
+      outOfScope: true,
     },
   ])
 
@@ -38,57 +63,61 @@ function ScopedTodoCard() {
     return (
       <AutoLayout
         direction={'horizontal'}
-        verticalAlignItems={'center'}
+        verticalAlignItems={'start'}
         spacing={'auto'}
-        width={325}
-        overflow={'visible'}
+        width={320}
       >
         <AutoLayout
-          spacing={8}
-          verticalAlignItems={'center'}
           direction={'horizontal'}
-          overflow={'visible'}
+          verticalAlignItems={'start'}
+          spacing={8}
         >
-          <AutoLayout 
+          <SVG
             hidden={props.done || props.outOfScope ? true : false}
-            width={20} 
-            height={20} 
-            verticalAlignItems={'center'} 
-            horizontalAlignItems={'center'}
-          >
-            <Rectangle 
-              width={16}
-              height={16}
-              fill={'#FFF'}
-              stroke={'#B2B2B2'}
-              strokeWidth={1}
-              cornerRadius={4}
-            />
-          </AutoLayout>
+            src={`
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4.5" y="4.5" width="15" height="15" rx="3.5" stroke="#b2b2b2"/>
+              </svg>
+            `}
+          />
           <SVG 
             hidden={props.done === false || props.outOfScope ? true : false}
             src={`
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM14.2474 8.66436C14.6143 8.25158 14.5771 7.61951 14.1644 7.25259C13.7516 6.88567 13.1195 6.92285 12.7526 7.33564L9.45718 11.043L7.70711 9.29289C7.31658 8.90237 6.68342 8.90237 6.29289 9.29289C5.90237 9.68342 5.90237 10.3166 6.29289 10.7071L8.79289 13.2071C8.98764 13.4019 9.25408 13.5077 9.52937 13.4996C9.80467 13.4915 10.0644 13.3702 10.2474 13.1644L14.2474 8.66436Z" fill="#4AB393"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4C5.79086 4 4 5.79086 4 8V16C4 18.2091 5.79086 20 8 20H16C18.2091 20 20 18.2091 20 16V8C20 5.79086 18.2091 4 16 4H8ZM16.2474 10.6644C16.6143 10.2516 16.5771 9.61951 16.1644 9.25259C15.7516 8.88567 15.1195 8.92285 14.7526 9.33564L11.4572 13.043L9.70711 11.2929C9.31658 10.9024 8.68342 10.9024 8.29289 11.2929C7.90237 11.6834 7.90237 12.3166 8.29289 12.7071L10.7929 15.2071C10.9876 15.4019 11.2541 15.5077 11.5294 15.4996C11.8047 15.4915 12.0644 15.3702 12.2474 15.1644L16.2474 10.6644Z" fill="#4AB393"/>
               </svg>
             `}
           />
           <Rectangle 
-              width={20}
-              height={20}
-              fill={'#f0f0f0'}
-              hidden={!props.outOfScope}
-            />
+            hidden={!props.outOfScope}
+            fill={'#f2f2f2'}
+            width={24}
+            height={24}
+          />
           <Text 
-            fill={ props.outOfScope ? "#6D6D6D" : props.done ? "#949494" : "#000"}
-            fontSize={props.done || props.outOfScope ? 13 : 16}
-            textDecoration={props.done && !props.outOfScope ? 'strikethrough' : 'none'}
-            // onClick={() => makeTextEditable(this)}
+            fill={props.outOfScope ? "#6E6E6E" : props.done ? "#767676" : "#000"}
+            textDecoration={ props.done && !props.outOfScope ? "strikethrough" : "none"}
+            fontSize={props.done || props.outOfScope ? 14 : 15}
+            lineHeight={24}
+            width={220}
           >
             {props.title}
           </Text>
         </AutoLayout>
         <SVG
+          src={`
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#919191" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="10" width="4" height="4" rx="2" />
+              <rect x="10" y="10" width="4" height="4" rx="2" />
+              <rect x="16" y="10" width="4" height="4" rx="2" />
+            </svg>
+          `}
+          onClick={() =>
+            new Promise((resolve) => {
+              figma.showUI(__html__)
+            })}
+        />
+        {/* <SVG
           src={`
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="#AEAEAE">
               <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -98,7 +127,7 @@ function ScopedTodoCard() {
             new Promise((resolve) => {
               figma.showUI(__html__)
             })}
-        />
+        /> */}
         {/* <AutoLayout
           direction={"vertical"}
         >
@@ -180,11 +209,11 @@ function ScopedTodoCard() {
       fill={'#fff'}
       stroke={'#E5E5E5'}
       strokeWidth={1}
+      width={364}
     >
-
       <AutoLayout
         direction={'vertical'}
-        spacing={24}
+        spacing={32}
         padding={24}
       >
         <AutoLayout
@@ -206,17 +235,14 @@ function ScopedTodoCard() {
               }
             ])}
           >
-            {/* <SVG src={`
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM11 7C11 6.44772 10.5523 6 10 6C9.44772 6 9 6.44772 9 7V9H7C6.44772 9 6 9.44772 6 10C6 10.5523 6.44772 11 7 11H9V13C9 13.5523 9.44772 14 10 14C10.5523 14 11 13.5523 11 13V11H13C13.5523 11 14 10.5523 14 10C14 9.44772 13.5523 9 13 9H11V7Z" fill="#8F8F8F"/>
-              </svg>`}
-            /> */}
-            <SVG src={`
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="#949494">
-                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>`}
+            <SVG
+              src={`
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C12.4602 7 12.8333 7.3731 12.8333 7.83333V11.1667H16.1667C16.6269 11.1667 17 11.5398 17 12C17 12.4602 16.6269 12.8333 16.1667 12.8333H12.8333V16.1667C12.8333 16.6269 12.4602 17 12 17C11.5398 17 11.1667 16.6269 11.1667 16.1667V12.8333H7.83333C7.3731 12.8333 7 12.4602 7 12C7 11.5398 7.3731 11.1667 7.83333 11.1667H11.1667V7.83333C11.1667 7.3731 11.5398 7 12 7Z" fill="#949494"/>
+              </svg>
+              `}
             />
-            <Text fill={'#828282'} fontSize={14} fontWeight={600}>Add a todo</Text>
+            <Text fill={'#767676'} fontSize={14} fontWeight={600}>Add a todo</Text>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout
@@ -228,13 +254,14 @@ function ScopedTodoCard() {
         </AutoLayout>
       </AutoLayout>
       <AutoLayout
+        hidden={outOfScopeTodos.length === 0}
         direction={'vertical'}
         horizontalAlignItems={'center'}
         spacing={8}
         padding={24}
-        fill={'#F0F0F0'}
+        fill={'#f2f2f2'}
       >
-        {outOfScopeTodos.length === 0 ? <Rectangle width={325} height={4} fill={'#F0F0F0'}></Rectangle> : outOfScopeTodos}
+        {outOfScopeTodos.length === 0 ? <Rectangle width={320} height={4} fill={'#f2f2f2'}></Rectangle> : outOfScopeTodos}
       </AutoLayout>
     </AutoLayout>
   )
