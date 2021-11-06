@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Your Figma widget",
   "main": "code.js",
-  "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
@@ -14,7 +13,7 @@
     "@figma/widget-typings": "*",
     "@types/node": "^16.11.6",
     "@types/uuid": "^8.3.1",
-    "css-loader": "^6.5.0",
+    "css-loader": "^6.5.1",
     "html-webpack-inline-source-plugin": "^1.0.0-beta.2",
     "html-webpack-plugin": "^5.5.0",
     "style-loader": "^3.3.1",

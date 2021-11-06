@@ -2,7 +2,8 @@
   "name": "Scope To-Do",
   "id": "1036372982291551669",
   "api": "1.0.0",
-  "main": "code.js",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
   "editorType": [
     "figjam"
   ],
