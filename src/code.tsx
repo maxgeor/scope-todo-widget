@@ -55,7 +55,7 @@ function ScopedTodoCard() {
             onClick={() => handleChange(id, "done", done)}
             src={`
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4.5" y="4.5" width="15" height="15" rx="3.5" stroke="#b2b2b2"/>
+                <rect x="4.5" y="4.5" width="15" height="15" rx="3.5" fill="white" stroke="#b2b2b2"/>
               </svg>
             `}
           />
@@ -176,9 +176,8 @@ function ScopedTodoCard() {
           }
         </AutoLayout>
       </AutoLayout>
-      {!todos.filter(todo => todo.outOfScope).length ?
-        <Rectangle width={364} height={48} fill={'#f2f2f2'} /> :
         <AutoLayout
+          hidden={!todos.filter(todo => todo.outOfScope).length}
           direction={'vertical'}
           horizontalAlignItems={'center'}
           spacing={8}
@@ -197,7 +196,6 @@ function ScopedTodoCard() {
             )
           }
         </AutoLayout>
-      }
     </AutoLayout>
   )
 }
