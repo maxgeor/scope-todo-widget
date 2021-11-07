@@ -39,7 +39,7 @@ function TodoWidget() {
         setTodos([...todos.filter(todo => todo.id !== id), targetTodo]);
     }
     const Todo = ({ key, id, title, done, outOfScope }) => {
-        return (figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'start', spacing: 'auto', width: 320 },
+        return (figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'start', spacing: 'auto', width: 330 },
             figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'start', spacing: 8 },
                 figma.widget.h(SVG, { hidden: done || outOfScope, onClick: () => handleChange(id, "done", done), src: `
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +52,7 @@ function TodoWidget() {
               </svg>
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 24, height: 24 }),
-                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", fontSize: done || outOfScope ? 14 : 15, lineHeight: 24, width: 220, onClick: () => figma.showUI(__html__) }, title)),
+                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", fontSize: done || outOfScope ? 15 : 16, lineHeight: 24, width: 230, onClick: () => figma.showUI(__html__) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
               <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@ function TodoWidget() {
               </svg>
             ` }))));
     };
-    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', stroke: '#E5E5E5', strokeWidth: 1, width: 364 },
+    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', stroke: '#E5E5E5', strokeWidth: 1, width: 374 },
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24 },
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8 },
                 todos
@@ -74,7 +74,7 @@ function TodoWidget() {
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M13.25 8C13.25 7.30964 12.6904 6.75 12 6.75C11.3096 6.75 10.75 7.30964 10.75 8V10.75H8C7.30964 10.75 6.75 11.3096 6.75 12C6.75 12.6904 7.30964 13.25 8 13.25H10.75V16C10.75 16.6904 11.3096 17.25 12 17.25C12.6904 17.25 13.25 16.6904 13.25 16V13.25H16C16.6904 13.25 17.25 12.6904 17.25 12C17.25 11.3096 16.6904 10.75 16 10.75H13.25V8Z"/>
                 </svg>
               ` }),
-                    figma.widget.h(TextBlock, { fill: '#949494', fontSize: 14, fontWeight: 700 }, "Add a todo"))),
+                    figma.widget.h(TextBlock, { fill: '#949494', fontSize: 15, lineHeight: 24, fontWeight: 700 }, "Add a todo"))),
             figma.widget.h(AutoLayout, { hidden: !todos.filter(todo => todo.done && !todo.outOfScope).length, direction: 'vertical', spacing: 8 }, todos
                 .filter(todo => todo.done && !todo.outOfScope)
                 .map(todo => figma.widget.h(Todo, { key: todo.key, id: todo.id, title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))),

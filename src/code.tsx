@@ -47,7 +47,7 @@ function TodoWidget() {
         direction={'horizontal'}
         verticalAlignItems={'start'}
         spacing={'auto'}
-        width={320}
+        width={330}
       >
         <AutoLayout
           direction={'horizontal'}
@@ -85,9 +85,9 @@ function TodoWidget() {
           />
           <TextBlock 
             fill={outOfScope ? "#6E6E6E" : done ? "#767676" : "#000"}
-            fontSize={done || outOfScope ? 14 : 15}
+            fontSize={done || outOfScope ? 15 : 16}
             lineHeight={24}
-            width={220}
+            width={230}
             onClick={() => figma.showUI(__html__)}
           >
             {title}
@@ -125,7 +125,7 @@ function TodoWidget() {
       fill={'#fff'}
       stroke={'#E5E5E5'}
       strokeWidth={1}
-      width={364}
+      width={374}
     >
       <AutoLayout
         direction={'vertical'}
@@ -162,7 +162,7 @@ function TodoWidget() {
                 </svg>
               `}
             />
-            <TextBlock fill={'#949494'} fontSize={14} fontWeight={700}>Add a todo</TextBlock>
+            <TextBlock fill={'#949494'} fontSize={15} lineHeight={24} fontWeight={700}>Add a todo</TextBlock>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout
