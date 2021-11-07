@@ -32,6 +32,7 @@ function ScopedTodoCard() {
     if (changedPropName === "done") {
       targetTodo.done = !changedPropValue
     } else if (changedPropName === "outOfScope") {
+      targetTodo.done = false
       targetTodo.outOfScope = !changedPropValue
     }
     setTodos([...todos.filter(todo => todo.id !== id), targetTodo])
@@ -86,7 +87,7 @@ function ScopedTodoCard() {
         </AutoLayout>
         <AutoLayout
           onClick={() => handleChange(id, "outOfScope", outOfScope)}
-          fill={'#fff'}      
+          fill={outOfScope ? "#f2f2f2" : "#fff"}      
         >
           <SVG
             src={`

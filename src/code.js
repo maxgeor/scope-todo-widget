@@ -25,6 +25,7 @@ function ScopedTodoCard() {
             targetTodo.done = !changedPropValue;
         }
         else if (changedPropName === "outOfScope") {
+            targetTodo.done = false;
             targetTodo.outOfScope = !changedPropValue;
         }
         setTodos([...todos.filter(todo => todo.id !== id), targetTodo]);
@@ -44,7 +45,7 @@ function ScopedTodoCard() {
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 24, height: 24 }),
                 figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", textDecoration: done && !outOfScope ? "strikethrough" : "none", fontSize: done || outOfScope ? 14 : 15, lineHeight: 24, width: 220 }, title)),
-            figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: '#fff' },
+            figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
               <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
                 <rect x="4" y="10" width="4" height="4" rx="2" />
