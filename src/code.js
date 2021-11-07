@@ -44,13 +44,14 @@ function ScopedTodoCard() {
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 24, height: 24 }),
                 figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", textDecoration: done && !outOfScope ? "strikethrough" : "none", fontSize: done || outOfScope ? 14 : 15, lineHeight: 24, width: 220 }, title)),
-            figma.widget.h(SVG, { onClick: () => handleChange(id, "outOfScope", outOfScope), src: `
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="10" width="4" height="4" rx="2" />
-              <rect x="10" y="10" width="4" height="4" rx="2" />
-              <rect x="16" y="10" width="4" height="4" rx="2" />
-            </svg>
-          ` })));
+            figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: '#fff' },
+                figma.widget.h(SVG, { src: `
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="10" width="4" height="4" rx="2" />
+                <rect x="10" y="10" width="4" height="4" rx="2" />
+                <rect x="16" y="10" width="4" height="4" rx="2" />
+              </svg>
+            ` }))));
     };
     return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', stroke: '#E5E5E5', strokeWidth: 1, width: 364 },
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24 },
@@ -58,7 +59,7 @@ function ScopedTodoCard() {
                 todos
                     .filter(todo => !todo.done && !todo.outOfScope)
                     .map(todo => figma.widget.h(Todo, { key: todo.key, id: todo.id, title: todo.title, done: todo.done, outOfScope: todo.outOfScope })),
-                figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 8, onClick: () => {
+                figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 8, fill: '#fff', onClick: () => {
                         const id = createId();
                         setTodos([
                             ...todos,

@@ -84,16 +84,20 @@ function ScopedTodoCard() {
             {title}
           </TextBlock>
         </AutoLayout>
-        <SVG
+        <AutoLayout
           onClick={() => handleChange(id, "outOfScope", outOfScope)}
-          src={`
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="10" width="4" height="4" rx="2" />
-              <rect x="10" y="10" width="4" height="4" rx="2" />
-              <rect x="16" y="10" width="4" height="4" rx="2" />
-            </svg>
-          `}
-        />
+          fill={'#fff'}      
+        >
+          <SVG
+            src={`
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="10" width="4" height="4" rx="2" />
+                <rect x="10" y="10" width="4" height="4" rx="2" />
+                <rect x="16" y="10" width="4" height="4" rx="2" />
+              </svg>
+            `}
+          />
+        </AutoLayout>
       </AutoLayout>
     )
   }
@@ -132,6 +136,7 @@ function ScopedTodoCard() {
             direction={'horizontal'}
             verticalAlignItems={'center'}
             spacing={8}
+            fill={'#fff'}
             onClick={() => {
               const id = createId()
               setTodos([
