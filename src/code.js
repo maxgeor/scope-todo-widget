@@ -4,11 +4,12 @@ import { nanoid as createId } from 'nanoid/non-secure';
 figma.ui.onmessage = msg => {
     if (msg.type === 'delete-todo') {
         // delete the todo
+        figma.closePlugin();
     }
     else if (msg.type === 'update-title') {
-        //set the todo's title to the *value* variable
+        // handleChange()
+        figma.closePlugin();
     }
-    figma.closePlugin();
 };
 function TodoWidget() {
     const widgetId = useWidgetId();
@@ -25,7 +26,10 @@ function TodoWidget() {
     }
     function handleChange(id, changedPropName, changedPropValue) {
         const targetTodo = todos.find(todo => todo.id === id);
-        if (changedPropName === "done") {
+        if (changedPropName === "title") {
+            targetTodo.title = !changedPropValue;
+        }
+        else if (changedPropName === "done") {
             targetTodo.done = !changedPropValue;
         }
         else if (changedPropName === "outOfScope") {
@@ -48,7 +52,7 @@ function TodoWidget() {
               </svg>
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 24, height: 24 }),
-                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", textDecoration: done && !outOfScope ? "strikethrough" : "none", fontSize: done || outOfScope ? 14 : 15, lineHeight: 24, width: 220, onClick: () => figma.showUI(__html__) }, title)),
+                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#949494" : "#000", fontSize: done || outOfScope ? 14 : 15, lineHeight: 24, width: 220, onClick: () => figma.showUI(__html__) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
               <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">

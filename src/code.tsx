@@ -6,10 +6,11 @@ import { nanoid as createId } from 'nanoid/non-secure'
 figma.ui.onmessage = msg => {
   if (msg.type === 'delete-todo') {
     // delete the todo
+    figma.closePlugin()
   } else if (msg.type === 'update-title') {
-    //set the todo's title to the *value* variable
+    // handleChange()
+    figma.closePlugin()
   }
-  figma.closePlugin()
 }
 
 function TodoWidget() {
@@ -29,7 +30,9 @@ function TodoWidget() {
 
   function handleChange (id: string, changedPropName: string, changedPropValue: any) {
     const targetTodo = todos.find(todo => todo.id === id)
-    if (changedPropName === "done") {
+    if (changedPropName === "title") {
+      targetTodo.title = !changedPropValue
+    } else if (changedPropName === "done") {
       targetTodo.done = !changedPropValue
     } else if (changedPropName === "outOfScope") {
       targetTodo.done = false
@@ -76,8 +79,7 @@ function TodoWidget() {
             height={24}
           />
           <TextBlock 
-            fill={outOfScope ? "#6E6E6E" : done ? "#767676" : "#000"}
-            textDecoration={ done && !outOfScope ? "strikethrough" : "none"}
+            fill={outOfScope ? "#6E6E6E" : done ? "#949494" : "#000"}
             fontSize={done || outOfScope ? 14 : 15}
             lineHeight={24}
             width={220}
