@@ -1,11 +1,24 @@
 import './ui.css'
 
-document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('count') as HTMLInputElement
-  const count = parseInt(textbox.value, 10)
-  parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
+function handleSubmit() {
+  const textbox = document.getElementById('title') as HTMLInputElement
+  const value = textbox.value;
+  if (value === "") {
+    parent.postMessage({ pluginMessage: { type: 'delete-todo' } }, '*')
+  } else {
+    parent.postMessage({ pluginMessage: { type: 'update-title', value } }, '*')
+  }
 }
 
-document.getElementById('cancel').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-}
+document.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    handleSubmit();
+  }
+})
+
+window.addEventListener('click', (e) => {
+  const popup = document.getElementById("edit-todo-title-popup");
+  if (e.target !== popup) {
+    handleSubmit();
+  }
+})
