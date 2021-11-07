@@ -1,24 +1,28 @@
 const { widget } = figma;
-const { useSyncedState, useEffect, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget;
+const { useSyncedState, useWidgetId, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget;
 import { nanoid as createId } from 'nanoid/non-secure';
-// figma.showUI(__html__)
-// figma.ui.onmessage = msg => {
-//   if (msg.type === 'create-rectangles') {
-//     const nodes = []
-//     for (let i = 0; i < msg.count; i++) {
-//       const rect = figma.createRectangle()
-//       rect.x = i * 150
-//       rect.fills = [{type: 'SOLID', color: {r: 1, g: 0.5, b: 0}}]
-//       figma.currentPage.appendChild(rect)
-//       nodes.push(rect)
-//     }
-//     figma.currentPage.selection = nodes
-//     figma.viewport.scrollAndZoomIntoView(nodes)
-//   }
-//   figma.closePlugin()
-// }
-function ScopedTodoCard() {
+figma.ui.onmessage = msg => {
+    if (msg.type === 'delete-todo') {
+        // delete the todo
+    }
+    else if (msg.type === 'update-title') {
+        //set the todo's title to the *value* variable
+    }
+    figma.closePlugin();
+};
+function TodoWidget() {
+    const widgetId = useWidgetId();
     const [todos, setTodos] = useSyncedState('todos', []);
+    function handleAdd() {
+        const id = createId();
+        setTodos([
+            ...todos,
+            {
+                key: id, id: id, title: "This is a really long todo with a lot of conditions and other stuff", done: false, outOfScope: false
+            }
+        ]);
+        figma.showUI(__html__);
+    }
     function handleChange(id, changedPropName, changedPropValue) {
         const targetTodo = todos.find(todo => todo.id === id);
         if (changedPropName === "done") {
@@ -35,7 +39,7 @@ function ScopedTodoCard() {
             figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'start', spacing: 8 },
                 figma.widget.h(SVG, { hidden: done || outOfScope, onClick: () => handleChange(id, "done", done), src: `
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4.5" y="4.5" width="15" height="15" rx="3.5" fill="white" stroke="#b2b2b2"/>
+                <rect x="4.5" y="4.5" width="15" height="15" rx="3.5" fill="white" stroke="#aeaeae"/>
               </svg>
             ` }),
                 figma.widget.h(SVG, { hidden: !done || outOfScope, onClick: () => handleChange(id, "done", done), src: `
@@ -44,7 +48,7 @@ function ScopedTodoCard() {
               </svg>
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 24, height: 24 }),
-                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", textDecoration: done && !outOfScope ? "strikethrough" : "none", fontSize: done || outOfScope ? 14 : 15, lineHeight: 24, width: 220 }, title)),
+                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", textDecoration: done && !outOfScope ? "strikethrough" : "none", fontSize: done || outOfScope ? 14 : 15, lineHeight: 24, width: 220, onClick: () => figma.showUI(__html__) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
               <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
@@ -60,19 +64,7 @@ function ScopedTodoCard() {
                 todos
                     .filter(todo => !todo.done && !todo.outOfScope)
                     .map(todo => figma.widget.h(Todo, { key: todo.key, id: todo.id, title: todo.title, done: todo.done, outOfScope: todo.outOfScope })),
-                figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 8, fill: '#fff', onClick: () => {
-                        const id = createId();
-                        setTodos([
-                            ...todos,
-                            {
-                                key: id,
-                                id: id,
-                                title: "New todo",
-                                done: false,
-                                outOfScope: false
-                            }
-                        ]);
-                    } },
+                figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 8, fill: '#fff', onClick: handleAdd },
                     figma.widget.h(SVG, { src: `
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="#949494" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C12.5523 7 13 7.44772 13 8V16C13 16.5523 12.5523 17 12 17C11.4477 17 11 16.5523 11 16V8C11 7.44772 11.4477 7 12 7Z" />
@@ -86,4 +78,4 @@ function ScopedTodoCard() {
         figma.widget.h(AutoLayout, { hidden: !todos.filter(todo => todo.outOfScope).length, direction: 'vertical', horizontalAlignItems: 'center', spacing: 8, padding: 24, fill: '#f2f2f2' }, todos.filter(todo => todo.outOfScope)
             .map(todo => figma.widget.h(Todo, { key: todo.key, id: todo.id, title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))));
 }
-widget.register(ScopedTodoCard);
+widget.register(TodoWidget);

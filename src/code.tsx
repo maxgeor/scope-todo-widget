@@ -1,32 +1,32 @@
 const { widget } = figma
-const { useSyncedState, useEffect, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget
+const { useSyncedState, useWidgetId, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget
 
 import { nanoid as createId } from 'nanoid/non-secure'
 
-// figma.showUI(__html__)
+figma.ui.onmessage = msg => {
+  if (msg.type === 'delete-todo') {
+    // delete the todo
+  } else if (msg.type === 'update-title') {
+    //set the todo's title to the *value* variable
+  }
+  figma.closePlugin()
+}
 
-// figma.ui.onmessage = msg => {
-//   if (msg.type === 'create-rectangles') {
-//     const nodes = []
-
-//     for (let i = 0; i < msg.count; i++) {
-//       const rect = figma.createRectangle()
-//       rect.x = i * 150
-//       rect.fills = [{type: 'SOLID', color: {r: 1, g: 0.5, b: 0}}]
-//       figma.currentPage.appendChild(rect)
-//       nodes.push(rect)
-//     }
-
-//     figma.currentPage.selection = nodes
-//     figma.viewport.scrollAndZoomIntoView(nodes)
-//   }
-
-//   figma.closePlugin()
-// }
-
-function ScopedTodoCard() {
+function TodoWidget() {
+  const widgetId = useWidgetId()
   const [todos, setTodos] = useSyncedState('todos', [])
   
+  function handleAdd() {
+    const id = createId()
+    setTodos([
+      ...todos,
+      {
+        key: id, id: id, title: "This is a really long todo with a lot of conditions and other stuff", done: false, outOfScope: false
+      }
+    ])
+    figma.showUI(__html__)
+  }
+
   function handleChange (id: string, changedPropName: string, changedPropValue: any) {
     const targetTodo = todos.find(todo => todo.id === id)
     if (changedPropName === "done") {
@@ -56,7 +56,7 @@ function ScopedTodoCard() {
             onClick={() => handleChange(id, "done", done)}
             src={`
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4.5" y="4.5" width="15" height="15" rx="3.5" fill="white" stroke="#b2b2b2"/>
+                <rect x="4.5" y="4.5" width="15" height="15" rx="3.5" fill="white" stroke="#aeaeae"/>
               </svg>
             `}
           />
@@ -81,6 +81,7 @@ function ScopedTodoCard() {
             fontSize={done || outOfScope ? 14 : 15}
             lineHeight={24}
             width={220}
+            onClick={() => figma.showUI(__html__)}
           >
             {title}
           </TextBlock>
@@ -138,19 +139,7 @@ function ScopedTodoCard() {
             verticalAlignItems={'center'}
             spacing={8}
             fill={'#fff'}
-            onClick={() => {
-              const id = createId()
-              setTodos([
-                ...todos,
-                {
-                  key: id,
-                  id: id,
-                  title: "New todo",
-                  done: false,
-                  outOfScope: false
-                }
-              ])
-            }}
+            onClick={handleAdd}
           >
             <SVG
               src={`
@@ -206,4 +195,4 @@ function ScopedTodoCard() {
   )
 }
 
-widget.register(ScopedTodoCard)
+widget.register(TodoWidget)
