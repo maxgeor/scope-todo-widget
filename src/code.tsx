@@ -85,7 +85,6 @@ function TodoWidget() {
           />
           <TextBlock 
             fill={outOfScope ? "#6E6E6E" : done ? "#767676" : "#000"}
-            // textDecoration={ done && !outOfScope ? "strikethrough" : "none"}
             fontSize={done || outOfScope ? 14 : 15}
             lineHeight={24}
             width={220}
@@ -158,7 +157,7 @@ function TodoWidget() {
           >
             <SVG
               src={`
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#a0a0a0" xmlns="http://www.w3.org/2000/svg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#a2a2a2" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M13.25 8C13.25 7.30964 12.6904 6.75 12 6.75C11.3096 6.75 10.75 7.30964 10.75 8V10.75H8C7.30964 10.75 6.75 11.3096 6.75 12C6.75 12.6904 7.30964 13.25 8 13.25H10.75V16C10.75 16.6904 11.3096 17.25 12 17.25C12.6904 17.25 13.25 16.6904 13.25 16V13.25H16C16.6904 13.25 17.25 12.6904 17.25 12C17.25 11.3096 16.6904 10.75 16 10.75H13.25V8Z"/>
                 </svg>
               `}
