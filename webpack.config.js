@@ -13,6 +13,8 @@ module.exports = (env, argv) => ({
     code: './src/code.tsx', // The entry point for your plugin code
   },
 
+  cache: false,
+
   module: {
     rules: [
       // Converts TypeScript code to JavaScript
@@ -42,6 +44,7 @@ module.exports = (env, argv) => ({
       filename: 'ui.html',
       inlineSource: '.(js)$',
       chunks: ['ui'],
+      inject: 'body'
     }),
     new HtmlWebpackInlineSourcePlugin(HtmlWebpackPlugin),
   ],
