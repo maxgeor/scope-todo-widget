@@ -1,24 +1,48 @@
 import './ui.css'
 
-function handleSubmit() {
-  const textbox = document.getElementById('title') as HTMLInputElement
-  const value = textbox.value;
-  if (value === "") {
-    parent.postMessage({ pluginMessage: { type: 'delete-todo' } }, '*')
+const textbox = <HTMLInputElement>document.getElementById('textbox')
+textbox.focus()
+
+let id: string
+
+onmessage = (event) => {
+  id = event.data.pluginMessage.id
+}
+
+const handleClose = (title: string) => {
+  if (title === '') {
+    parent.postMessage({ pluginMessage: { type: 'delete-todo', id }}, '*')
   } else {
-    parent.postMessage({ pluginMessage: { type: 'update-title', value } }, '*')
+    parent.postMessage({ pluginMessage: { type: 'close-plugin' }}, '*')
   }
 }
 
-document.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    handleSubmit();
+textbox.addEventListener('blur', () => {
+  const title = textbox.value
+  handleClose(title)
+})
+
+textbox.addEventListener('keyup', (e) => {
+  const title = textbox.value
+  if (e.key === "Enter" || e.key === "Escape") {
+    handleClose(title)
+  } else {
+    parent.postMessage({ pluginMessage: { type: 'update-title', title, id }}, '*')
   }
 })
 
-window.addEventListener('click', (e) => {
-  const popup = document.getElementById("edit-todo-title-popup");
-  if (e.target !== popup) {
-    handleSubmit();
-  }
-})
+// function handleSubmit() {
+  // const textbox = document.getElementById('title') as HTMLInputElement
+  // const value = textbox.value;
+  // if (value === "") {
+  //   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+  // } else {
+  //   parent.postMessage({ pluginMessage: { type: 'update-todo-title', value } }, '*')
+  // }
+// }
+
+// document.addEventListener('keypress', (e) => {
+//   if (e.key === 'Enter') {
+//     handleSubmit();
+//   }
+// })

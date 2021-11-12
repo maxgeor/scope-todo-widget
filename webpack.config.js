@@ -32,7 +32,7 @@ module.exports = (env, argv) => ({
   resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
 
   output: {
-    filename: '[name].js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'), // Compile into a folder called "dist"
     publicPath: '/'
   },

@@ -1,38 +1,42 @@
 const { widget } = figma;
-const { useSyncedState, useWidgetId, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget;
+const { useSyncedState, useEffect, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget;
 import { nanoid as createId } from 'nanoid/non-secure';
-figma.ui.onmessage = msg => {
-    if (msg.type === 'delete-todo') {
-        // delete the todo
-        figma.closePlugin();
-    }
-    else if (msg.type === 'update-title') {
-        // handleChange()
-        figma.closePlugin();
-    }
-};
 function TodoWidget() {
-    const widgetId = useWidgetId();
     const [todos, setTodos] = useSyncedState('todos', []);
-    function handleAdd() {
-        const id = createId();
+    useEffect(() => {
+        figma.ui.onmessage = msg => {
+            if (msg.type === 'update-title') {
+                handleChange(msg.id, 'title', msg.title);
+            }
+            else if (msg.type === 'delete-todo') {
+                deleteTodo(msg.id);
+                figma.closePlugin();
+            }
+            else if (msg.type === 'close-plugin') {
+                figma.closePlugin();
+            }
+        };
+    });
+    function deleteTodo(id) {
+        setTodos([...todos.filter(todo => todo.id !== id)]);
+    }
+    function createTodo(id) {
         setTodos([
             ...todos,
             {
-                key: id, id: id, title: "This is a really long todo with a lot of conditions and other stuff", done: false, outOfScope: false
+                key: id, id, title: '', done: false, outOfScope: false
             }
         ]);
-        figma.showUI(__html__);
     }
-    function handleChange(id, changedPropName, changedPropValue) {
+    function handleChange(id, changedProp, changedPropValue) {
         const targetTodo = todos.find(todo => todo.id === id);
-        if (changedPropName === "title") {
-            targetTodo.title = !changedPropValue;
+        if (changedProp === "title") {
+            targetTodo.title = changedPropValue;
         }
-        else if (changedPropName === "done") {
+        else if (changedProp === "done") {
             targetTodo.done = !changedPropValue;
         }
-        else if (changedPropName === "outOfScope") {
+        else if (changedProp === "outOfScope") {
             targetTodo.done = false;
             targetTodo.outOfScope = !changedPropValue;
         }
@@ -52,7 +56,10 @@ function TodoWidget() {
               </svg>
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 24, height: 24 }),
-                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", fontSize: done || outOfScope ? 15 : 16, lineHeight: 24, width: 230, onClick: () => figma.showUI(__html__) }, title)),
+                figma.widget.h(TextBlock, { fill: outOfScope || done ? "#6E6E6E" : "#000", fontSize: done || outOfScope ? 15 : 16, lineHeight: 24, width: 230, onClick: () => new Promise((resolve) => {
+                        figma.showUI(__html__);
+                        figma.ui.postMessage({ id });
+                    }) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
               <svg width="24" height="24" viewBox="0 0 24 24" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +75,12 @@ function TodoWidget() {
                 todos
                     .filter(todo => !todo.done && !todo.outOfScope)
                     .map(todo => figma.widget.h(Todo, { key: todo.key, id: todo.id, title: todo.title, done: todo.done, outOfScope: todo.outOfScope })),
-                figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 8, fill: '#fff', onClick: handleAdd },
+                figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'center', spacing: 8, fill: '#fff', onClick: () => new Promise((resolve) => {
+                        const id = createId();
+                        createTodo(id);
+                        figma.showUI(__html__);
+                        figma.ui.postMessage({ id });
+                    }) },
                     figma.widget.h(SVG, { src: `
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="#a2a2a2" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M13.25 8C13.25 7.30964 12.6904 6.75 12 6.75C11.3096 6.75 10.75 7.30964 10.75 8V10.75H8C7.30964 10.75 6.75 11.3096 6.75 12C6.75 12.6904 7.30964 13.25 8 13.25H10.75V16C10.75 16.6904 11.3096 17.25 12 17.25C12.6904 17.25 13.25 16.6904 13.25 16V13.25H16C16.6904 13.25 17.25 12.6904 17.25 12C17.25 11.3096 16.6904 10.75 16 10.75H13.25V8Z"/>
