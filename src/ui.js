@@ -1,9 +1,19 @@
 import './ui.css';
 const textbox = document.getElementById('textbox');
 textbox.focus();
+if (textbox.value !== '') {
+    textbox.select();
+}
+let widget;
 let id;
 onmessage = (event) => {
-    id = event.data.pluginMessage.id;
+    const msg = event.data.pluginMessage;
+    widget = msg.widget;
+    console.log(msg.widget);
+    id = msg.id;
+    if (msg.type === 'edit') {
+        textbox.value = msg.title;
+    }
 };
 const handleClose = (title) => {
     if (title === '') {
