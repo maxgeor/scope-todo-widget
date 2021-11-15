@@ -35,8 +35,6 @@ function TodoWidget() {
   }
 
   function handleChange (id: string, changedProp: string, changedPropValue: any) {
-    // const targetTodo = todos.find(todo => todo.id === id)
-    // console.log(todos.indexOf(todos.find(todo => todo.id === id)))
     const getUpdatedTodo = (todo: {title: string, done: boolean, outOfScope: boolean}) => {
       if (changedProp === "title") {
         todo.title = changedPropValue
@@ -56,7 +54,6 @@ function TodoWidget() {
       }
     })
     setTodos(freshTodos)
-    // setTodos([...todos.filter(todo => todo.id !== id), targetTodo])
   }
 
   const Todo = ({ key, id, title, done, outOfScope }) => {

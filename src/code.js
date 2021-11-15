@@ -30,8 +30,6 @@ function TodoWidget() {
         ]);
     }
     function handleChange(id, changedProp, changedPropValue) {
-        // const targetTodo = todos.find(todo => todo.id === id)
-        // console.log(todos.indexOf(todos.find(todo => todo.id === id)))
         const getUpdatedTodo = (todo) => {
             if (changedProp === "title") {
                 todo.title = changedPropValue;
@@ -54,7 +52,6 @@ function TodoWidget() {
             }
         });
         setTodos(freshTodos);
-        // setTodos([...todos.filter(todo => todo.id !== id), targetTodo])
     }
     const Todo = ({ key, id, title, done, outOfScope }) => {
         return (figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'start', spacing: 'auto', width: 290 },
