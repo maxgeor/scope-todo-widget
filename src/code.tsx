@@ -83,7 +83,7 @@ function TodoWidget() {
             onClick={() => handleChange(id, "done", done)}
             src={`
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM14.4343 8.83045C14.8929 8.31448 14.8464 7.52439 14.3305 7.06574C13.8145 6.60709 13.0244 6.65357 12.5657 7.16955L9.44648 10.6787L7.88388 9.11612C7.39573 8.62796 6.60427 8.62796 6.11612 9.11612C5.62796 9.60427 5.62796 10.3957 6.11612 10.8839L8.61612 13.3839C8.85955 13.6273 9.1926 13.7596 9.53672 13.7495C9.88083 13.7393 10.2055 13.5878 10.4343 13.3305L14.4343 8.83045Z" fill="#4AB393"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM14.3408 8.74741C14.7536 8.28303 14.7118 7.57195 14.2474 7.15916C13.783 6.74638 13.0719 6.78821 12.6592 7.25259L10.6592 9.50259L9.45183 10.8608L7.7955 9.2045C7.35616 8.76516 6.64384 8.76516 6.2045 9.2045C5.76517 9.64384 5.76517 10.3562 6.2045 10.7955L8.7045 13.2955C8.92359 13.5146 9.22334 13.6336 9.53305 13.6245C9.84275 13.6154 10.135 13.479 10.3408 13.2474L12.3408 10.9974L14.3408 8.74741Z" fill="#4AB393"/>
               </svg>
             `}
           />
@@ -94,7 +94,7 @@ function TodoWidget() {
             height={20}
           />
           <TextBlock 
-            fill={outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010"}
+            fill={outOfScope || done ? "#6E6E6E" : "#101010"}
             fontSize={done || outOfScope ? 13 : 14}
             lineHeight={20}
             width={200}
@@ -115,10 +115,10 @@ function TodoWidget() {
         >
           <SVG
             src={`
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="9" width="4" height="4" rx="2" fill="#949494"/>
-                <rect x="9" y="9" width="4" height="4" rx="2" fill="#949494"/>
-                <rect x="15" y="9" width="4" height="4" rx="2" fill="#949494"/>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="8" width="4" height="4" rx="2" fill="#949494"/>
+                <rect x="8" y="8" width="4" height="4" rx="2" fill="#949494"/>
+                <rect x="14" y="8" width="4" height="4" rx="2" fill="#949494"/>
               </svg>
             `}
           />
@@ -134,7 +134,7 @@ function TodoWidget() {
       fill={'#fff'}
       stroke={'#E5E5E5'}
       strokeWidth={1}
-      width={334}
+      width={330}
     >
       <AutoLayout
         direction={'vertical'}
@@ -176,12 +176,13 @@ function TodoWidget() {
           >
             <SVG
               src={`
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="#a2a2a2" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 6C11.25 5.30964 10.6904 4.75 10 4.75C9.30964 4.75 8.75 5.30964 8.75 6V8.75H6C5.30964 8.75 4.75 9.30964 4.75 10C4.75 10.6904 5.30964 11.25 6 11.25H8.75V14C8.75 14.6904 9.30964 15.25 10 15.25C10.6904 15.25 11.25 14.6904 11.25 14V11.25H14C14.6904 11.25 15.25 10.6904 15.25 10C15.25 9.30964 14.6904 8.75 14 8.75H11.25V6Z"/>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M10.125 5C10.7463 5 11.25 5.44772 11.25 6V14C11.25 14.5523 10.7463 15 10.125 15C9.50368 15 9 14.5523 9 14V6C9 5.44772 9.50368 5 10.125 5Z" fill="#949494"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M5 9.875C5 9.25368 5.44772 8.75 6 8.75L14 8.75C14.5523 8.75 15 9.25368 15 9.875C15 10.4963 14.5523 11 14 11L6 11C5.44772 11 5 10.4963 5 9.875Z" fill="#949494"/>
                 </svg>
               `}
             />
-            <TextBlock fill={'#949494'} fontSize={14} lineHeight={20} fontWeight={700}>Add a todo</TextBlock>
+            <TextBlock fill={'#949494'} fontSize={13} lineHeight={20} fontWeight={700}>Add a todo</TextBlock>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout
