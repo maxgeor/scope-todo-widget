@@ -62,7 +62,7 @@ function TodoWidget() {
         direction={'horizontal'}
         verticalAlignItems={'start'}
         spacing={'auto'}
-        width={290}
+        width={280}
       >
         <AutoLayout
           direction={'horizontal'}
@@ -134,26 +134,13 @@ function TodoWidget() {
       fill={'#fff'}
       stroke={'#E5E5E5'}
       strokeWidth={1}
-      width={344}
+      width={334}
     >
       <AutoLayout
         direction={'vertical'}
         spacing={24}
         padding={24}
       >
-        {/* `<AutoLayout
-          direction={'vertical'}
-          horizontalAlignItems={'center'}
-        >
-          <TextBlock
-            fontSize={18}
-            lineHeight={24}
-            fontWeight={700}
-            fill={'#b1b1b1'}
-          >
-            Title...
-          </TextBlock>
-        </AutoLayout>` */}
         <AutoLayout
           direction={'vertical'}
           spacing={8}
@@ -216,7 +203,7 @@ function TodoWidget() {
       </AutoLayout>
       <AutoLayout
         width={'fill-parent'}
-        height={!todos.filter(todo => todo.outOfScope).length ? 48 : 'hug-contents'}
+        height={!todos.filter(todo => todo.outOfScope).length ? 40 : 'hug-contents'}
         direction={'vertical'}
         horizontalAlignItems={'center'}
         spacing={8}
