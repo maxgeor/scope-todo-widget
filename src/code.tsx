@@ -62,7 +62,7 @@ function TodoWidget() {
         direction={'horizontal'}
         verticalAlignItems={'start'}
         spacing={'auto'}
-        width={280}
+        width={'fill-parent'}
       >
         <AutoLayout
           direction={'horizontal'}
@@ -140,10 +140,12 @@ function TodoWidget() {
         direction={'vertical'}
         spacing={24}
         padding={24}
+        width={'fill-parent'}
       >
         <AutoLayout
           direction={'vertical'}
           spacing={8}
+          width={'fill-parent'}
         >
           {todos
             .filter(todo => !todo.done && !todo.outOfScope)
@@ -186,6 +188,7 @@ function TodoWidget() {
           hidden={!todos.filter(todo => todo.done && !todo.outOfScope).length}
           direction={'vertical'}
           spacing={8}
+          width={'fill-parent'}
         >
           {todos
             .filter(todo => todo.done && !todo.outOfScope)
