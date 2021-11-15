@@ -35,16 +35,28 @@ function TodoWidget() {
   }
 
   function handleChange (id: string, changedProp: string, changedPropValue: any) {
-    const targetTodo = todos.find(todo => todo.id === id)
-    if (changedProp === "title") {
-      targetTodo.title = changedPropValue
-    } else if (changedProp === "done") {
-      targetTodo.done = !changedPropValue
-    } else if (changedProp === "outOfScope") {
-      targetTodo.done = false
-      targetTodo.outOfScope = !changedPropValue
+    // const targetTodo = todos.find(todo => todo.id === id)
+    // console.log(todos.indexOf(todos.find(todo => todo.id === id)))
+    const getUpdatedTodo = (todo: {title: string, done: boolean, outOfScope: boolean}) => {
+      if (changedProp === "title") {
+        todo.title = changedPropValue
+      } else if (changedProp === "done") {
+        todo.done = !changedPropValue
+      } else if (changedProp === "outOfScope") {
+        todo.done = false
+        todo.outOfScope = !changedPropValue
+      }
+      return todo
     }
-    setTodos([...todos.filter(todo => todo.id !== id), targetTodo])
+    const freshTodos = todos.map(todo => {
+      if(todo.id === id) {
+        return getUpdatedTodo(todo)
+      } else {
+        return todo
+      }
+    })
+    setTodos(freshTodos)
+    // setTodos([...todos.filter(todo => todo.id !== id), targetTodo])
   }
 
   const Todo = ({ key, id, title, done, outOfScope }) => {
@@ -85,8 +97,8 @@ function TodoWidget() {
             height={20}
           />
           <TextBlock 
-            fill={outOfScope ? "#6E6E6E" : done ? "#767676" : "#000"}
-            fontSize={14}
+            fill={outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010"}
+            fontSize={done || outOfScope ? 13 : 14}
             lineHeight={20}
             width={200}
             onClick={() => 
@@ -106,7 +118,7 @@ function TodoWidget() {
         >
           <SVG
             src={`
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="9" width="4" height="4" rx="2" fill="#949494"/>
                 <rect x="9" y="9" width="4" height="4" rx="2" fill="#949494"/>
                 <rect x="15" y="9" width="4" height="4" rx="2" fill="#949494"/>
@@ -132,7 +144,7 @@ function TodoWidget() {
         spacing={24}
         padding={24}
       >
-        {/* <AutoLayout
+        {/* `<AutoLayout
           direction={'vertical'}
           horizontalAlignItems={'center'}
         >
@@ -144,7 +156,7 @@ function TodoWidget() {
           >
             Title...
           </TextBlock>
-        </AutoLayout> */}
+        </AutoLayout>` */}
         <AutoLayout
           direction={'vertical'}
           spacing={8}

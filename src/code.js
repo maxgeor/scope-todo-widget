@@ -30,18 +30,31 @@ function TodoWidget() {
         ]);
     }
     function handleChange(id, changedProp, changedPropValue) {
-        const targetTodo = todos.find(todo => todo.id === id);
-        if (changedProp === "title") {
-            targetTodo.title = changedPropValue;
-        }
-        else if (changedProp === "done") {
-            targetTodo.done = !changedPropValue;
-        }
-        else if (changedProp === "outOfScope") {
-            targetTodo.done = false;
-            targetTodo.outOfScope = !changedPropValue;
-        }
-        setTodos([...todos.filter(todo => todo.id !== id), targetTodo]);
+        // const targetTodo = todos.find(todo => todo.id === id)
+        // console.log(todos.indexOf(todos.find(todo => todo.id === id)))
+        const getUpdatedTodo = (todo) => {
+            if (changedProp === "title") {
+                todo.title = changedPropValue;
+            }
+            else if (changedProp === "done") {
+                todo.done = !changedPropValue;
+            }
+            else if (changedProp === "outOfScope") {
+                todo.done = false;
+                todo.outOfScope = !changedPropValue;
+            }
+            return todo;
+        };
+        const freshTodos = todos.map(todo => {
+            if (todo.id === id) {
+                return getUpdatedTodo(todo);
+            }
+            else {
+                return todo;
+            }
+        });
+        setTodos(freshTodos);
+        // setTodos([...todos.filter(todo => todo.id !== id), targetTodo])
     }
     const Todo = ({ key, id, title, done, outOfScope }) => {
         return (figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'start', spacing: 'auto', width: 290 },
@@ -57,14 +70,14 @@ function TodoWidget() {
               </svg>
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 20, height: 20 }),
-                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#000", fontSize: 14, lineHeight: 20, width: 200, onClick: () => new Promise((resolve) => {
+                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 200, onClick: () => new Promise((resolve) => {
                         const widget = figma.getNodeById(widgetId);
                         figma.showUI(__html__);
                         figma.ui.postMessage({ type: 'edit', id, title, widget });
                     }) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="${outOfScope ? "#919191" : "#949494"}" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="9" width="4" height="4" rx="2" fill="#949494"/>
                 <rect x="9" y="9" width="4" height="4" rx="2" fill="#949494"/>
                 <rect x="15" y="9" width="4" height="4" rx="2" fill="#949494"/>

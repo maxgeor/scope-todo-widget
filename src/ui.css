@@ -3,6 +3,9 @@ body {
     text-align: center;
     margin: 8px;
     max-height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
   input {
     border: none;
