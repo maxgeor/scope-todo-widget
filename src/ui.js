@@ -33,9 +33,3 @@ textbox.addEventListener('keyup', (e) => {
         parent.postMessage({ pluginMessage: { type: 'update-title', title, id } }, '*');
     }
 });
-textbox.addEventListener('keypress', (e) => {
-    const title = textbox.value;
-    if (e.key === 'Backspace' && title === '') {
-        handleClose(title);
-    }
-});
