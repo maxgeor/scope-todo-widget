@@ -97,7 +97,7 @@ function TodoWidget() {
             fill={outOfScope || done ? "#6E6E6E" : "#101010"}
             fontSize={done || outOfScope ? 13 : 14}
             lineHeight={20}
-            width={200}
+            width={180}
             onClick={() => 
               new Promise((resolve) => {
                 const widget = figma.getNodeById(widgetId)
@@ -134,7 +134,7 @@ function TodoWidget() {
       fill={'#fff'}
       stroke={'#E5E5E5'}
       strokeWidth={1}
-      width={330}
+      width={310}
     >
       <AutoLayout
         direction={'vertical'}
@@ -206,6 +206,7 @@ function TodoWidget() {
         </AutoLayout>
       </AutoLayout>
       <AutoLayout
+        hidden={todos.filter(todo => todo.outOfScope).length === 0}
         width={'fill-parent'}
         height={!todos.filter(todo => todo.outOfScope).length ? 40 : 'hug-contents'}
         direction={'vertical'}
