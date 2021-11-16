@@ -35,25 +35,16 @@ textbox.addEventListener('blur', () => {
 
 textbox.addEventListener('keyup', (e) => {
   const title = textbox.value
-  if (e.key === "Enter" || e.key === "Escape") {
+  if (e.key === 'Enter' || e.key === 'Escape') {
     handleClose(title)
-  } else {
+  }  else {
     parent.postMessage({ pluginMessage: { type: 'update-title', title, id }}, '*')
   }
 })
+textbox.addEventListener('keypress', (e) => {
+  const title = textbox.value
+  if (e.key === 'Backspace' && title === '') {
+    handleClose(title)
+  }
+})
 
-// function handleSubmit() {
-  // const textbox = document.getElementById('title') as HTMLInputElement
-  // const value = textbox.value;
-  // if (value === "") {
-  //   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-  // } else {
-  //   parent.postMessage({ pluginMessage: { type: 'update-todo-title', value } }, '*')
-  // }
-// }
-
-// document.addEventListener('keypress', (e) => {
-//   if (e.key === 'Enter') {
-//     handleSubmit();
-//   }
-// })

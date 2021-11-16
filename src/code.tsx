@@ -101,7 +101,7 @@ function TodoWidget() {
             onClick={() => 
               new Promise((resolve) => {
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__html__)
+                figma.showUI(__html__, {height: 56, title: 'Edit your todo', position: {y: -950, x: 527}})
                 figma.ui.postMessage({ type: 'edit', id, title, widget })
               })
             }
@@ -182,7 +182,7 @@ function TodoWidget() {
                 </svg>
               `}
             />
-            <TextBlock fill={'#949494'} fontSize={13} lineHeight={20} fontWeight={700}>Add a todo</TextBlock>
+            <TextBlock fill={'#8B8B8B'} fontSize={13} lineHeight={20} fontWeight={700}>Add a todo</TextBlock>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout

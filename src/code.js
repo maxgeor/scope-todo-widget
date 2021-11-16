@@ -69,7 +69,7 @@ function TodoWidget() {
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 20, height: 20 }),
                 figma.widget.h(TextBlock, { fill: outOfScope || done ? "#6E6E6E" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 180, onClick: () => new Promise((resolve) => {
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__html__);
+                        figma.showUI(__html__, { height: 56, title: 'Edit your todo', position: { y: -950, x: 527 } });
                         figma.ui.postMessage({ type: 'edit', id, title, widget });
                     }) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
@@ -100,7 +100,7 @@ function TodoWidget() {
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M5 9.875C5 9.25368 5.44772 8.75 6 8.75L14 8.75C14.5523 8.75 15 9.25368 15 9.875C15 10.4963 14.5523 11 14 11L6 11C5.44772 11 5 10.4963 5 9.875Z" fill="#949494"/>
                 </svg>
               ` }),
-                    figma.widget.h(TextBlock, { fill: '#949494', fontSize: 13, lineHeight: 20, fontWeight: 700 }, "Add a todo"))),
+                    figma.widget.h(TextBlock, { fill: '#8B8B8B', fontSize: 13, lineHeight: 20, fontWeight: 700 }, "Add a todo"))),
             figma.widget.h(AutoLayout, { hidden: !todos.filter(todo => todo.done && !todo.outOfScope).length, direction: 'vertical', spacing: 8, width: 'fill-parent' }, todos
                 .filter(todo => todo.done && !todo.outOfScope)
                 .map(todo => figma.widget.h(Todo, { key: todo.key, id: todo.id, title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))),
