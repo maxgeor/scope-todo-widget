@@ -75,13 +75,13 @@ function TodoWidget() {
             figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="8" width="4" height="4" rx="2" fill="#949494"/>
+                <rect x="1.6" y="8" width="4" height="4" rx="2" fill="#949494"/>
                 <rect x="8" y="8" width="4" height="4" rx="2" fill="#949494"/>
-                <rect x="14" y="8" width="4" height="4" rx="2" fill="#949494"/>
+                <rect x="14.4" y="8" width="4" height="4" rx="2" fill="#949494"/>
               </svg>
             ` }))));
     };
-    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', stroke: '#E5E5E5', strokeWidth: 1, width: 310 },
+    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', stroke: '#E5E5E5', strokeWidth: 1, width: 315 },
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24, width: 'fill-parent' },
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8, width: 'fill-parent' },
                 todos
