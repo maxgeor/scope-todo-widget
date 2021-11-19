@@ -1,5 +1,5 @@
 const { widget } = figma
-const { useSyncedState, useWidgetId, useEffect, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget
+const { useSyncedState, useWidgetId, usePropertyMenu, useEffect, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget
 import { nanoid as createId } from 'nanoid/non-secure'
 
 function TodoWidget() {
@@ -55,6 +55,19 @@ function TodoWidget() {
     })
     setTodos(freshTodos)
   }
+  
+  usePropertyMenu(
+    [
+      {
+        tooltip: "Clear all",
+        propertyName: "clear-all",
+        itemType: "action"
+      },
+    ],
+    (e) => {
+      setTodos([])
+    }
+  )
 
   const Todo = ({ key, id, title, done, outOfScope }) => {
     return (
@@ -101,7 +114,7 @@ function TodoWidget() {
             onClick={() => 
               new Promise((resolve) => {
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__html__, {height: 56, title: 'Edit your todo', position: {y: -950, x: 527}})
+                figma.showUI(__html__, {height: 56, title: 'Edit your todo', position: {y: 0, x: 0}})
                 figma.ui.postMessage({ type: 'edit', id, title, widget })
               })
             }
@@ -182,7 +195,7 @@ function TodoWidget() {
                 </svg>
               `}
             />
-            <TextBlock fill={'#8B8B8B'} fontSize={13} lineHeight={20} fontWeight={700}>Add a todo</TextBlock>
+            <TextBlock fill={'#828282'} fontSize={13} lineHeight={20} fontWeight={700}>Add a todo</TextBlock>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout

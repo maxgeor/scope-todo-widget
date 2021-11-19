@@ -1,11 +1,9 @@
 
 import './ui.css'
 
-
 const textbox = <HTMLInputElement>document.getElementById('textbox')
 textbox.focus()
 textbox.select()
-
 
 let widget
 let id: string
