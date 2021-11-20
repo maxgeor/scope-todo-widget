@@ -149,10 +149,10 @@ function TodoWidget() {
       stroke={'#E9E9E9'}
       effect={{
         type: 'drop-shadow',
-        color: { r: 0, g: 0, b: 0, a: 0.08 },
+        color: { r: 0, g: 0, b: 0, a: 0.07 },
         offset: { x: 0, y: 4 },
         blur: 12,
-        spread: -16,
+        spread: -24,
       }}
     >
       <AutoLayout

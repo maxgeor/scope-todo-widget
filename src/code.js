@@ -92,10 +92,10 @@ function TodoWidget() {
     };
     return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', width: 320, stroke: '#E9E9E9', effect: {
             type: 'drop-shadow',
-            color: { r: 0, g: 0, b: 0, a: 0.08 },
+            color: { r: 0, g: 0, b: 0, a: 0.07 },
             offset: { x: 0, y: 4 },
             blur: 12,
-            spread: -16,
+            spread: -24,
         } },
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24, width: 'fill-parent' },
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8, width: 'fill-parent' },
