@@ -145,9 +145,15 @@ function TodoWidget() {
       direction={'vertical'}
       cornerRadius={8}
       fill={'#fff'}
-      stroke={'#E5E5E5'}
-      strokeWidth={1}
-      width={315}
+      width={320}
+      stroke={'#E9E9E9'}
+      effect={{
+        type: 'drop-shadow',
+        color: { r: 0, g: 0, b: 0, a: 0.12 },
+        offset: { x: 0, y: 4 },
+        blur: 8,
+        spread: -32,
+      }}
     >
       <AutoLayout
         direction={'vertical'}
@@ -195,7 +201,7 @@ function TodoWidget() {
                 </svg>
               `}
             />
-            <TextBlock fill={'#828282'} fontSize={13} lineHeight={20} fontWeight={700}>Add a todo</TextBlock>
+            <TextBlock fill={'#949494'} fontSize={14} lineHeight={20} fontWeight={700} letterSpacing={'-0.8%'}>Add a todo</TextBlock>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout
