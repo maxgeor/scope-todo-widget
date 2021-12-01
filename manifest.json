@@ -4,7 +4,7 @@
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": {
-    "edit":"dist/ui.html",
+    "ui":"dist/ui.html",
     "menu":"dist/menu.html"
   },
   "editorType": [

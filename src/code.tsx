@@ -10,12 +10,12 @@ function TodoWidget() {
     figma.ui.onmessage = msg => {
       if (msg.type === 'update-title') {
         handleChange(msg.id, 'title', msg.title)
-      }
-      else if (msg.type === 'delete-todo') {
+      } else if (msg.type === 'delete-todo') {
         deleteTodo(msg.id)
         figma.closePlugin()
-      }
-      else if (msg.type === 'close-plugin') {
+      } else if (msg.type === 'flip-todo-scope') {
+        handleChange(msg.id, 'scope', !msg.outOfScope)
+      } else if (msg.type === 'close-plugin') {
         figma.closePlugin()
       }
     }
@@ -114,7 +114,7 @@ function TodoWidget() {
             onClick={() => 
               new Promise((resolve) => {
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__html__, {height: 56, title: 'Edit your todo', position: {y: 0, x: 0}})
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: 0, x: 0}})
                 figma.ui.postMessage({ type: 'edit', id, title, widget })
               })
             }
@@ -123,7 +123,14 @@ function TodoWidget() {
           </TextBlock>
         </AutoLayout>
         <AutoLayout
-          onClick={() => handleChange(id, "outOfScope", outOfScope)}
+          // onClick={() => handleChange(id, "outOfScope", outOfScope)}
+          onClick={() => 
+            new Promise((resolve) => {
+              const widget = figma.getNodeById(widgetId)
+              figma.showUI(__uiFiles__.menu)
+              figma.ui.postMessage({ type: 'menu', id, title, outOfScope, widget })
+            })
+          }
           fill={outOfScope ? "#f2f2f2" : "#fff"}      
         >
           <SVG
@@ -188,7 +195,7 @@ function TodoWidget() {
                 const id = createId()
                 createTodo(id)
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__html__)
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: 0, x: 0}})
                 figma.ui.postMessage({ type: 'add', id, widget })
               })
             }
