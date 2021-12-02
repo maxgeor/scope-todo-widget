@@ -3,7 +3,10 @@
   "id": "1036372982291551669",
   "api": "1.0.0",
   "main": "dist/code.js",
-  "ui": "dist/ui.html",
+  "ui": {
+    "ui":"dist/ui.html",
+    "menu":"dist/menu.html"
+  },
   "editorType": [
     "figjam"
   ],

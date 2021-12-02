@@ -13,6 +13,9 @@ function TodoWidget() {
                 deleteTodo(msg.id);
                 figma.closePlugin();
             }
+            else if (msg.type === 'flip-todo-scope') {
+                handleChange(msg.id, 'scope', !msg.outOfScope);
+            }
             else if (msg.type === 'close-plugin') {
                 figma.closePlugin();
             }
@@ -78,10 +81,18 @@ function TodoWidget() {
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 20, height: 20 }),
                 figma.widget.h(TextBlock, { fill: outOfScope || done ? "#6E6E6E" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 180, onClick: () => new Promise((resolve) => {
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__html__, { height: 56, title: 'Edit your todo', position: { y: 0, x: 0 } });
+                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Edit your todo', position: { y: 0, x: 0 } });
                         figma.ui.postMessage({ type: 'edit', id, title, widget });
                     }) }, title)),
-            figma.widget.h(AutoLayout, { onClick: () => handleChange(id, "outOfScope", outOfScope), fill: outOfScope ? "#f2f2f2" : "#fff" },
+            figma.widget.h(AutoLayout
+            // onClick={() => handleChange(id, "outOfScope", outOfScope)}
+            , { 
+                // onClick={() => handleChange(id, "outOfScope", outOfScope)}
+                onClick: () => new Promise((resolve) => {
+                    const widget = figma.getNodeById(widgetId);
+                    figma.showUI(__uiFiles__.menu);
+                    figma.ui.postMessage({ type: 'menu', id, title, outOfScope, widget });
+                }), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="1.6" y="8" width="4" height="4" rx="2" fill="#949494"/>
@@ -92,10 +103,10 @@ function TodoWidget() {
     };
     return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', width: 320, stroke: '#E9E9E9', effect: {
             type: 'drop-shadow',
-            color: { r: 0, g: 0, b: 0, a: 0.08 },
+            color: { r: 0, g: 0, b: 0, a: 0.06 },
             offset: { x: 0, y: 4 },
             blur: 12,
-            spread: -16,
+            spread: -24,
         } },
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24, width: 'fill-parent' },
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8, width: 'fill-parent' },
@@ -106,7 +117,7 @@ function TodoWidget() {
                         const id = createId();
                         createTodo(id);
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__html__);
+                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Edit your todo', position: { y: 0, x: 0 } });
                         figma.ui.postMessage({ type: 'add', id, widget });
                     }) },
                     figma.widget.h(SVG, { src: `
