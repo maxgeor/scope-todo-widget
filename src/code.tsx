@@ -195,7 +195,7 @@ function TodoWidget() {
                 const id = createId()
                 createTodo(id)
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: 0, x: 0}})
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Add a todo', position: {y: 0, x: 0}})
                 figma.ui.postMessage({ type: 'add', id, widget })
               })
             }
