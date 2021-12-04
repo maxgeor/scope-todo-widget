@@ -35,20 +35,20 @@ function TodoWidget() {
   }
 
   function handleChange (id: string, changedProp: string, changedPropValue: any) {
-    const getUpdatedTodo = (todo: {title: string, done: boolean, outOfScope: boolean}) => {
-      if (changedProp === "title") {
+    const updateTodo = (todo: {title: string, done: boolean, outOfScope: boolean}) => {
+      if (changedProp === 'title') {
         todo.title = changedPropValue
-      } else if (changedProp === "done") {
+      } else if (changedProp === 'done') {
         todo.done = !changedPropValue
-      } else if (changedProp === "outOfScope") {
+      } else if (changedProp === 'outOfScope') {
         todo.done = false
-        todo.outOfScope = !changedPropValue
+        todo.outOfScope = changedPropValue
       }
       return todo
     }
     const freshTodos = todos.map(todo => {
       if(todo.id === id) {
-        return getUpdatedTodo(todo)
+        return updateTodo(todo)
       } else {
         return todo
       }
@@ -114,7 +114,7 @@ function TodoWidget() {
             onClick={() => 
               new Promise((resolve) => {
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: widget.y - 150, x: widget.x}})
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: widget.y - 151, x: widget.x}})
                 figma.ui.postMessage({ type: 'edit', id, title, widget })
               })
             }
@@ -126,7 +126,7 @@ function TodoWidget() {
           onClick={() => 
             new Promise((resolve) => {
               const widget = figma.getNodeById(widgetId)
-              figma.showUI(__uiFiles__.menu, {height: 85, width: 180, title: 'Menu', position: {y: widget.y, x: widget.x + widget.width + 8}})
+              figma.showUI(__uiFiles__.menu, {height: 85, width: 180, title: 'Menu', position: {y: widget.y, x: widget.x + widget.width + 7}})
               figma.ui.postMessage({ type: 'menu', id, title, outOfScope, widget })
             })
           }
@@ -194,8 +194,7 @@ function TodoWidget() {
                 const id = createId()
                 createTodo(id)
                 const widget = figma.getNodeById(widgetId)
-                console.log(widget)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Add a todo', position: {y: widget.y - 150, x: widget.x}})
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Add a todo', position: {y: widget.y - 151, x: widget.x}})
                 figma.ui.postMessage({ type: 'add', id, widget })
               })
             }
