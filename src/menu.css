@@ -1,0 +1,36 @@
+body {
+  font: 12px sans-serif;
+  text-align: center;
+  margin: 0;
+  width: 180px;
+}
+section {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0;
+}
+button {
+  background: none;
+	color: inherit;
+	border: none;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+button > * {
+  margin-right: 8px;
+  pointer-events: none
+}
+/* 
+.icon {
+  margin-right: 8px;
+} */
+
+button:hover {
+  background: #f0f0f0;
+}
+

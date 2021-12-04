@@ -14,7 +14,7 @@ function TodoWidget() {
         deleteTodo(msg.id)
         figma.closePlugin()
       } else if (msg.type === 'flip-todo-scope') {
-        handleChange(msg.id, 'scope', !msg.outOfScope)
+        handleChange(msg.id, 'outOfScope', msg.outOfScope)
       } else if (msg.type === 'close-plugin') {
         figma.closePlugin()
       }
@@ -59,7 +59,7 @@ function TodoWidget() {
   usePropertyMenu(
     [
       {
-        tooltip: "Clear all",
+        tooltip: "Clear All",
         propertyName: "clear-all",
         itemType: "action"
       },
@@ -107,14 +107,14 @@ function TodoWidget() {
             height={20}
           />
           <TextBlock 
-            fill={outOfScope || done ? "#6E6E6E" : "#101010"}
+            fill={outOfScope ?  "#6E6E6E" : done ? "#767676" : "#101010"}
             fontSize={done || outOfScope ? 13 : 14}
             lineHeight={20}
             width={180}
             onClick={() => 
               new Promise((resolve) => {
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: 0, x: 0}})
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: widget.y - 150, x: widget.x}})
                 figma.ui.postMessage({ type: 'edit', id, title, widget })
               })
             }
@@ -123,11 +123,10 @@ function TodoWidget() {
           </TextBlock>
         </AutoLayout>
         <AutoLayout
-          // onClick={() => handleChange(id, "outOfScope", outOfScope)}
           onClick={() => 
             new Promise((resolve) => {
               const widget = figma.getNodeById(widgetId)
-              figma.showUI(__uiFiles__.menu)
+              figma.showUI(__uiFiles__.menu, {height: 85, width: 180, title: 'Menu', position: {y: widget.y, x: widget.x + widget.width + 8}})
               figma.ui.postMessage({ type: 'menu', id, title, outOfScope, widget })
             })
           }
@@ -153,10 +152,10 @@ function TodoWidget() {
       cornerRadius={8}
       fill={'#fff'}
       width={320}
-      stroke={'#e8e8e8'}
+      stroke={'#e7e7e7'}
       effect={{
         type: 'drop-shadow',
-        color: { r: 0, g: 0, b: 0, a: 0.08 },
+        color: { r: 0, g: 0, b: 0, a: 0.09 },
         offset: { x: 0, y: 4 },
         blur: 12,
         spread: -24,
@@ -195,7 +194,8 @@ function TodoWidget() {
                 const id = createId()
                 createTodo(id)
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Add a todo', position: {y: 0, x: 0}})
+                console.log(widget)
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Add a todo', position: {y: widget.y - 150, x: widget.x}})
                 figma.ui.postMessage({ type: 'add', id, widget })
               })
             }
@@ -208,7 +208,7 @@ function TodoWidget() {
                 </svg>
               `}
             />
-            <TextBlock fill={'#949494'} fontSize={14} lineHeight={20} fontWeight={700} letterSpacing={'-0.8%'}>Add a todo</TextBlock>
+            <TextBlock fill={'#949494'} fontSize={14} lineHeight={20} fontWeight={700} letterSpacing={'-0.75%'}>Add a todo</TextBlock>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout

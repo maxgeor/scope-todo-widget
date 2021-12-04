@@ -1,4 +1,4 @@
-import './ui.css'
+import './menu.css'
 
 const deleteBtn = <HTMLButtonElement>document.getElementById('delete-btn')
 const moveOutBtn = <HTMLButtonElement>document.getElementById('move-out-btn')
@@ -15,6 +15,8 @@ onmessage = (event) => {
   outOfScope = msg.outOfScope
 }
 
+outOfScope ? moveOutBtn.style.display = 'none' : moveInBtn.style.display = 'none'
+
 const handleClose = () => {
   parent.postMessage({ pluginMessage: { type: 'close-plugin' }}, '*')
 }
@@ -24,6 +26,7 @@ document.addEventListener('click', (e) => {
     parent.postMessage({ pluginMessage: { type: 'delete-todo', id }}, '*')
     handleClose()
   } else if (e.target === moveOutBtn || e.target === moveInBtn) {
+    outOfScope = !outOfScope
     parent.postMessage({ pluginMessage: { type: 'flip-todo-scope', id, outOfScope }}, '*')
     handleClose()
   }

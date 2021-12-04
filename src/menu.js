@@ -1,4 +1,4 @@
-import './ui.css';
+import './menu.css';
 const deleteBtn = document.getElementById('delete-btn');
 const moveOutBtn = document.getElementById('move-out-btn');
 const moveInBtn = document.getElementById('move-in-btn');
@@ -11,6 +11,7 @@ onmessage = (event) => {
     id = msg.id;
     outOfScope = msg.outOfScope;
 };
+outOfScope ? moveOutBtn.style.display = 'none' : moveInBtn.style.display = 'none';
 const handleClose = () => {
     parent.postMessage({ pluginMessage: { type: 'close-plugin' } }, '*');
 };
@@ -20,6 +21,7 @@ document.addEventListener('click', (e) => {
         handleClose();
     }
     else if (e.target === moveOutBtn || e.target === moveInBtn) {
+        outOfScope = !outOfScope;
         parent.postMessage({ pluginMessage: { type: 'flip-todo-scope', id, outOfScope } }, '*');
         handleClose();
     }

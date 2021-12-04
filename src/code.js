@@ -14,7 +14,7 @@ function TodoWidget() {
                 figma.closePlugin();
             }
             else if (msg.type === 'flip-todo-scope') {
-                handleChange(msg.id, 'scope', !msg.outOfScope);
+                handleChange(msg.id, 'outOfScope', msg.outOfScope);
             }
             else if (msg.type === 'close-plugin') {
                 figma.closePlugin();
@@ -58,7 +58,7 @@ function TodoWidget() {
     }
     usePropertyMenu([
         {
-            tooltip: "Clear all",
+            tooltip: "Clear All",
             propertyName: "clear-all",
             itemType: "action"
         },
@@ -79,18 +79,14 @@ function TodoWidget() {
               </svg>
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 20, height: 20 }),
-                figma.widget.h(TextBlock, { fill: outOfScope || done ? "#6E6E6E" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 180, onClick: () => new Promise((resolve) => {
+                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 180, onClick: () => new Promise((resolve) => {
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Edit your todo', position: { y: 0, x: 0 } });
+                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Edit your todo', position: { y: widget.y - 150, x: widget.x } });
                         figma.ui.postMessage({ type: 'edit', id, title, widget });
                     }) }, title)),
-            figma.widget.h(AutoLayout
-            // onClick={() => handleChange(id, "outOfScope", outOfScope)}
-            , { 
-                // onClick={() => handleChange(id, "outOfScope", outOfScope)}
-                onClick: () => new Promise((resolve) => {
+            figma.widget.h(AutoLayout, { onClick: () => new Promise((resolve) => {
                     const widget = figma.getNodeById(widgetId);
-                    figma.showUI(__uiFiles__.menu);
+                    figma.showUI(__uiFiles__.menu, { height: 85, width: 180, title: 'Menu', position: { y: widget.y, x: widget.x + widget.width + 8 } });
                     figma.ui.postMessage({ type: 'menu', id, title, outOfScope, widget });
                 }), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
@@ -101,9 +97,9 @@ function TodoWidget() {
               </svg>
             ` }))));
     };
-    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', width: 320, stroke: '#e8e8e8', effect: {
+    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', width: 320, stroke: '#e7e7e7', effect: {
             type: 'drop-shadow',
-            color: { r: 0, g: 0, b: 0, a: 0.08 },
+            color: { r: 0, g: 0, b: 0, a: 0.09 },
             offset: { x: 0, y: 4 },
             blur: 12,
             spread: -24,
@@ -117,7 +113,8 @@ function TodoWidget() {
                         const id = createId();
                         createTodo(id);
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Add a todo', position: { y: 0, x: 0 } });
+                        console.log(widget);
+                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Add a todo', position: { y: widget.y - 150, x: widget.x } });
                         figma.ui.postMessage({ type: 'add', id, widget });
                     }) },
                     figma.widget.h(SVG, { src: `
@@ -126,7 +123,7 @@ function TodoWidget() {
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M5 9.875C5 9.25368 5.44772 8.75 6 8.75L14 8.75C14.5523 8.75 15 9.25368 15 9.875C15 10.4963 14.5523 11 14 11L6 11C5.44772 11 5 10.4963 5 9.875Z" fill="#949494"/>
                 </svg>
               ` }),
-                    figma.widget.h(TextBlock, { fill: '#949494', fontSize: 14, lineHeight: 20, fontWeight: 700, letterSpacing: '-0.8%' }, "Add a todo"))),
+                    figma.widget.h(TextBlock, { fill: '#949494', fontSize: 14, lineHeight: 20, fontWeight: 700, letterSpacing: '-0.75%' }, "Add a todo"))),
             figma.widget.h(AutoLayout, { hidden: !todos.filter(todo => todo.done && !todo.outOfScope).length, direction: 'vertical', spacing: 8, width: 'fill-parent' }, todos
                 .filter(todo => todo.done && !todo.outOfScope)
                 .map(todo => figma.widget.h(Todo, { key: todo.key, id: todo.id, title: todo.title, done: todo.done, outOfScope: todo.outOfScope })))),
