@@ -114,7 +114,7 @@ function TodoWidget() {
             onClick={() => 
               new Promise((resolve) => {
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: widget.y - 151, x: widget.x}})
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: widget.y - 168, x: widget.x}})
                 figma.ui.postMessage({ type: 'edit', id, title, widget })
               })
             }
@@ -194,7 +194,7 @@ function TodoWidget() {
                 const id = createId()
                 createTodo(id)
                 const widget = figma.getNodeById(widgetId)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Add a todo', position: {y: widget.y - 151, x: widget.x}})
+                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Add a todo', position: {y: widget.y - 168, x: widget.x}})
                 figma.ui.postMessage({ type: 'add', id, widget })
               })
             }

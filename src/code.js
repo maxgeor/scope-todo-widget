@@ -81,7 +81,7 @@ function TodoWidget() {
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 20, height: 20 }),
                 figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 180, onClick: () => new Promise((resolve) => {
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Edit your todo', position: { y: widget.y - 151, x: widget.x } });
+                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Edit your todo', position: { y: widget.y - 168, x: widget.x } });
                         figma.ui.postMessage({ type: 'edit', id, title, widget });
                     }) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => new Promise((resolve) => {
@@ -113,7 +113,7 @@ function TodoWidget() {
                         const id = createId();
                         createTodo(id);
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Add a todo', position: { y: widget.y - 151, x: widget.x } });
+                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Add a todo', position: { y: widget.y - 168, x: widget.x } });
                         figma.ui.postMessage({ type: 'add', id, widget });
                     }) },
                     figma.widget.h(SVG, { src: `
