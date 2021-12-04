@@ -86,7 +86,7 @@ function TodoWidget() {
                     }) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => new Promise((resolve) => {
                     const widget = figma.getNodeById(widgetId);
-                    figma.showUI(__uiFiles__.menu, { height: 85, width: 180, title: 'Menu', position: { y: widget.y, x: widget.x + widget.width + 7 } });
+                    figma.showUI(__uiFiles__.menu, { height: 85, width: 180, title: 'Menu', position: { y: widget.y - 59, x: widget.x + widget.width + 7 } });
                     figma.ui.postMessage({ type: 'menu', id, title, outOfScope, widget });
                 }), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
