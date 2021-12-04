@@ -1,7 +1,6 @@
 import './ui.css';
 const textbox = document.getElementById('textbox');
 textbox.focus();
-textbox.select();
 let widget;
 let id;
 onmessage = (event) => {
@@ -10,6 +9,7 @@ onmessage = (event) => {
     id = msg.id;
     if (msg.type === 'edit') {
         textbox.value = msg.title;
+        textbox.select();
     }
 };
 const handleClose = (title) => {

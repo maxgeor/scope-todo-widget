@@ -10,8 +10,11 @@ onmessage = (event) => {
     widget = msg.widget;
     id = msg.id;
     outOfScope = msg.outOfScope;
+    if (outOfScope === true) {
+        moveInBtn.style.display = 'flex';
+        moveOutBtn.style.display = 'none';
+    }
 };
-outOfScope ? moveOutBtn.style.display = 'none' : moveInBtn.style.display = 'none';
 const handleClose = () => {
     parent.postMessage({ pluginMessage: { type: 'close-plugin' } }, '*');
 };

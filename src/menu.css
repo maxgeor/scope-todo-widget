@@ -21,6 +21,10 @@ button {
   padding: 0 12px;
 }
 
+#move-in-btn {
+  display: none;
+}
+
 button > * {
   margin-right: 8px;
   pointer-events: none

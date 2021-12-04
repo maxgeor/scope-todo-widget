@@ -81,12 +81,12 @@ function TodoWidget() {
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: '#f2f2f2', width: 20, height: 20 }),
                 figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 180, onClick: () => new Promise((resolve) => {
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Edit your todo', position: { y: widget.y - 168, x: widget.x } });
+                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Edit your todo', position: { y: widget.y - 150, x: widget.x } });
                         figma.ui.postMessage({ type: 'edit', id, title, widget });
                     }) }, title)),
             figma.widget.h(AutoLayout, { onClick: () => new Promise((resolve) => {
                     const widget = figma.getNodeById(widgetId);
-                    figma.showUI(__uiFiles__.menu, { height: 85, width: 180, title: 'Menu', position: { y: widget.y - 59, x: widget.x + widget.width + 7 } });
+                    figma.showUI(__uiFiles__.menu, { height: 85, width: 180, title: 'Menu', position: { y: widget.y - 58, x: widget.x + widget.width + 7 } });
                     figma.ui.postMessage({ type: 'menu', id, title, outOfScope, widget });
                 }), fill: outOfScope ? "#f2f2f2" : "#fff" },
                 figma.widget.h(SVG, { src: `
@@ -113,7 +113,7 @@ function TodoWidget() {
                         const id = createId();
                         createTodo(id);
                         const widget = figma.getNodeById(widgetId);
-                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Add a todo', position: { y: widget.y - 168, x: widget.x } });
+                        figma.showUI(__uiFiles__.ui, { height: 56, title: 'Add a todo', position: { y: widget.y - 150, x: widget.x } });
                         figma.ui.postMessage({ type: 'add', id, widget });
                     }) },
                     figma.widget.h(SVG, { src: `
