@@ -1,4 +1,3 @@
-
 import './ui.css'
 
 const textbox = <HTMLInputElement>document.getElementById('textbox')
@@ -16,7 +15,6 @@ onmessage = (event) => {
     textbox.select()
   }
 }
-
 
 const handleClose = (title: string) => {
   if (title === '') {
