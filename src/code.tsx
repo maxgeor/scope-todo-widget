@@ -56,18 +56,20 @@ function TodoWidget() {
     setTodos(freshTodos)
   }
   
-  usePropertyMenu(
-    [
-      {
-        tooltip: "Clear All",
-        propertyName: "clear-all",
-        itemType: "action"
-      },
-    ],
-    (e) => {
-      setTodos([])
-    }
-  )
+  if (todos.length > 4) {
+    usePropertyMenu(
+      [
+        {
+          tooltip: "Clear All",
+          propertyName: "clear-all",
+          itemType: "action"
+        },
+      ],
+      (e) => {
+        setTodos([])
+      }
+    )
+  }
 
   const Todo = ({ key, id, title, done, outOfScope }) => {
     return (
