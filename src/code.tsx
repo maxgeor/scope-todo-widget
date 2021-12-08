@@ -55,7 +55,7 @@ function TodoWidget() {
     })
     setTodos(freshTodos)
   }
-  
+
   if (todos.length > 4) {
     usePropertyMenu(
       [
@@ -65,9 +65,7 @@ function TodoWidget() {
           itemType: "action"
         },
       ],
-      (e) => {
-        setTodos([])
-      }
+      (e) => setTodos([])
     )
   }
 

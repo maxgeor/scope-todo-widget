@@ -63,9 +63,7 @@ function TodoWidget() {
                 propertyName: "clear-all",
                 itemType: "action"
             },
-        ], (e) => {
-            setTodos([]);
-        });
+        ], (e) => setTodos([]));
     }
     const Todo = ({ key, id, title, done, outOfScope }) => {
         return (figma.widget.h(AutoLayout, { direction: 'horizontal', verticalAlignItems: 'start', spacing: 'auto', width: 'fill-parent' },
