@@ -1,1 +1,1 @@
-{"compilerOptions":{"moduleResolution": "node", "jsx":"react","jsxFactory":"figma.widget.h","target":"es6","lib":["es6", "DOM"],"typeRoots":["./node_modules/@types","./node_modules/@figma"]}}
+{"compilerOptions":{"moduleResolution": "node", "jsx":"react","jsxFactory":"figma.widget.h","target":"es6","lib":["es6", "DOM"],"typeRoots":["./node_modules/@types","./node_modules/@figma"], "strict": true}}

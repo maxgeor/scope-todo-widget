@@ -4,7 +4,7 @@ import { nanoid as createId } from 'nanoid/non-secure'
 
 function TodoWidget() {
   const widgetId = useWidgetId()
-  const [todos, setTodos] = useSyncedState('todos', [])
+  const [todos, setTodos] = useSyncedState<any[]>('todos', [])
 
   useEffect(() => {
     figma.ui.onmessage = msg => {

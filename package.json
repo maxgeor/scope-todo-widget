@@ -9,7 +9,7 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "@figma/plugin-typings": "^1.38.0",
+    "@figma/plugin-typings": "^1.43.0",
     "@figma/widget-typings": "*",
     "@types/node": "^16.11.6",
     "@types/uuid": "^8.3.1",
