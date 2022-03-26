@@ -4,13 +4,14 @@
   "description": "Your Figma widget",
   "main": "code.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "watch": "webpack --watch"
   },
   "author": "",
   "license": "",
   "devDependencies": {
     "@figma/plugin-typings": "^1.43.0",
-    "@figma/widget-typings": "*",
+    "@figma/widget-typings": "^1.0.3",
     "@types/node": "^16.11.6",
     "@types/uuid": "^8.3.1",
     "css-loader": "^6.5.1",
