@@ -7,9 +7,7 @@
     "ui":"dist/ui.html",
     "menu":"dist/menu.html"
   },
-  "editorType": [
-    "figjam"
-  ],
+  "editorType": ["figma", "figjam"],
   "containsWidget": true,
   "widgetApi": "1.0.0"
 }
