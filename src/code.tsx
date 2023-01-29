@@ -1,39 +1,72 @@
 const { widget } = figma
-const { useSyncedState, useWidgetId, usePropertyMenu, useEffect, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget
+const { 
+  useSyncedState, 
+  useWidgetId, 
+  usePropertyMenu, 
+  useEffect, 
+  AutoLayout, 
+  Text: TextBlock, 
+  SVG, 
+  Rectangle,
+  Input,
+} = widget
 import { nanoid as createId } from 'nanoid/non-secure'
 
 function TodoWidget() {
   const widgetId = useWidgetId()
-  const [todos, setTodos] = useSyncedState<any[]>('todos', [])
+  const [uncompletedTodos, setUncompletedTodos] = useSyncedState<any[]>('uncompletedTodos', [])
+  const [completedTodos, setCompletedTodos] = useSyncedState<any[]>('completedTodos', [])
 
   interface TodoProps {
     key: string,
     id: string,
     title: string, 
-    done: boolean, 
+    done: boolean,
+    position: number,
     outOfScope: boolean
   } 
 
   useEffect(() => {
     figma.ui.onmessage = msg => {
-      if (msg.type === 'update-title') {
-        handleChange(msg.id, 'title', msg.title)
-      } else if (msg.type === 'delete-todo') {
-        deleteTodo(msg.id)
-        figma.closePlugin()
-      } else if (msg.type === 'flip-todo-scope') {
-        handleChange(msg.id, 'outOfScope', msg.outOfScope)
-      } else if (msg.type === 'close-plugin') {
-        figma.closePlugin()
+      switch(msg.type) {
+        case 'update-title':
+          handleChange(msg.id, 'title', msg.title)
+          break
+        case 'delete-todo':
+          msg.done ? deleteTodo(msg.id, completedTodos, setCompletedTodos) : deleteTodo(msg.id, uncompletedTodos, setUncompletedTodos)
+          figma.closePlugin()
+          break
+        case 'flip-todo-scope':
+          handleChange(msg.id, 'outOfScope', msg.outOfScope)
+          break
+        case 'move-todo-up':
+          handleChange(msg.id, 'position', msg.outOfScope)
+          break
+        case 'move-todo-up':
+          handleChange(msg.id, 'outOfScope', msg.outOfScope)
+          break
+        case 'close-plugin':
+          figma.closePlugin()
+          break
       }
+      // if (msg.type === 'update-title') {
+      //   handleChange(msg.id, 'title', msg.title)
+      // } else if (msg.type === 'delete-todo') {
+      //   deleteTodo(msg.id)
+      //   figma.closePlugin()
+      // } else if (msg.type === 'flip-todo-scope') {
+      //   handleChange(msg.id, 'outOfScope', msg.outOfScope)
+      // } else if (msg.type === 'close-plugin') {
+      //   figma.closePlugin()
+      // }
     }
   })
   
-  function deleteTodo(id: string) {
+  function deleteTodo(id: string, todos: { TodoProps }[], setTodos: Function) {
     setTodos([...todos.filter(todo => todo.id !== id)])
   }
 
-  function createTodo(id: string) {
+  function createTodo(id: string, todos: { TodoProps }[], setTodos: Function) {
     setTodos([
       ...todos,
       {
@@ -115,21 +148,22 @@ function TodoWidget() {
             width={20}
             height={20}
           />
-          <TextBlock 
+          <Input 
             fill={ props.outOfScope ?  "#6E6E6E" :  props.done ? "#767676" : "#101010"}
             fontSize={ props.done ||  props.outOfScope ? 13 : 14}
             lineHeight={20}
-            width={180}
-            onClick={() => 
-              new Promise((resolve) => {
-                const widget = figma.getNodeById(widgetId)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: (widget as WidgetNode).y - 150, x: (widget as WidgetNode).x}})
-                figma.ui.postMessage({ type: 'edit',  id: props.id,  title: props.title, widget })
-              })
-            }
-          >
-            { props.title}
-          </TextBlock>
+            width={200}
+            value={props.title}
+            placeholder={'Give your todo a title...'}
+            onTextEditEnd={(value) => handleChange( props.id, "title",  value)}
+            // onClick={() => 
+            //   new Promise((resolve) => {
+            //     const widget = figma.getNodeById(widgetId)
+            //     figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: (widget as WidgetNode).y - 150, x: (widget as WidgetNode).x}})
+            //     figma.ui.postMessage({ type: 'edit',  id: props.id,  title: props.title, widget })
+            //   })
+            // }
+          />
         </AutoLayout>
         <AutoLayout
           onClick={() => 
@@ -160,7 +194,7 @@ function TodoWidget() {
       direction={'vertical'}
       cornerRadius={8}
       fill={'#fff'}
-      width={360}
+      width={340}
       stroke={'#e7e7e7'}
     >
       <AutoLayout

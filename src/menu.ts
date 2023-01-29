@@ -1,8 +1,10 @@
 import './menu.css'
 
-const deleteBtn = <HTMLButtonElement>document.getElementById('delete-btn')
-const moveOutBtn = <HTMLButtonElement>document.getElementById('move-out-btn')
 const moveInBtn = <HTMLButtonElement>document.getElementById('move-in-btn')
+const moveOutBtn = <HTMLButtonElement>document.getElementById('move-out-btn')
+const moveUpBtn = <HTMLButtonElement>document.getElementById('move-up-btn')
+const moveDownBtn = <HTMLButtonElement>document.getElementById('move-down-btn')
+const deleteBtn = <HTMLButtonElement>document.getElementById('delete-btn')
 
 let widget
 let id: string
@@ -19,7 +21,6 @@ onmessage = (event) => {
   }
 }
 
-
 const handleClose = () => {
   parent.postMessage({ pluginMessage: { type: 'close-plugin' }}, '*')
 }
@@ -32,5 +33,14 @@ document.addEventListener('click', (e) => {
     outOfScope = !outOfScope
     parent.postMessage({ pluginMessage: { type: 'flip-todo-scope', id, outOfScope }}, '*')
     handleClose()
+  } else if (e.target === moveUpBtn || e.target === moveDownBtn) {
+    const movingUp = e.target === moveUpBtn
+
+    parent.postMessage({ 
+      pluginMessage: { 
+        type: movingUp ? 'move-todo-up' : 'move-todo-down', 
+        id 
+      }
+    }, '*')
   }
 })
