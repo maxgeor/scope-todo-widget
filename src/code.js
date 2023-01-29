@@ -96,13 +96,7 @@ function TodoWidget() {
               </svg>
             ` }))));
     };
-    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', width: 320, stroke: '#e7e7e7', effect: {
-            type: 'drop-shadow',
-            color: { r: 0, g: 0, b: 0, a: 0.09 },
-            offset: { x: 0, y: 4 },
-            blur: 12,
-            spread: -24,
-        } },
+    return (figma.widget.h(AutoLayout, { direction: 'vertical', cornerRadius: 8, fill: '#fff', width: 360, stroke: '#e7e7e7' },
         figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 24, padding: 24, width: 'fill-parent' },
             figma.widget.h(AutoLayout, { direction: 'vertical', spacing: 8, width: 'fill-parent' },
                 todos
