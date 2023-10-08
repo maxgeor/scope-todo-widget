@@ -1,18 +1,14 @@
 const { widget } = figma
-const { useSyncedState, useWidgetId, usePropertyMenu, useEffect, AutoLayout, Text: TextBlock, SVG, Rectangle } = widget
+const { useSyncedState, useWidgetId, usePropertyMenu, useEffect, AutoLayout, Text: TextBlock, SVG, Rectangle, Input } = widget
+import Todo from './Todo'
 import { nanoid as createId } from 'nanoid/non-secure'
 
 function TodoWidget() {
   const widgetId = useWidgetId()
-  const [todos, setTodos] = useSyncedState<any[]>('todos', [])
-
-  interface TodoProps {
-    key: string,
-    id: string,
-    title: string, 
-    done: boolean, 
-    outOfScope: boolean
-  } 
+  // const [todos, setTodos] = useSyncedState<any[]>('todos', [])
+  const [uncompletedTodos, setUncompletedTodos] = useSyncedState<any[]>('uncompletedTodos', [])
+  const [completedTodos, setcompletedTodos] = useSyncedState<any[]>('completedTodos', [])
+  const [outOfScopeTodos, setOutOfScopeTodos] = useSyncedState<any[]>('outOfScopeTodos', [])
 
   useEffect(() => {
     figma.ui.onmessage = msg => {
@@ -29,15 +25,25 @@ function TodoWidget() {
     }
   })
   
+  function findTodoPile(todo) {
+    if (todo.outOfScope) {
+      return [outOfScopeTodos, setOutOfScopeTodos]
+    } else if (todo.done) {
+      return [completedTodos, setcompletedTodos]
+    } else {
+      return [uncompletedTodos, setUncompletedTodos]
+    }
+  }
+
   function deleteTodo(id: string) {
     setTodos([...todos.filter(todo => todo.id !== id)])
   }
 
   function createTodo(id: string) {
-    setTodos([
-      ...todos,
+    setUncompletedTodos([
+      ...uncompletedTodos,
       {
-        key: id, id, title: '', done: false, outOfScope: false
+        id, title: '', done: false, outOfScope: false
       }
     ])
   }
@@ -55,14 +61,16 @@ function TodoWidget() {
           return todo
       }
     }
-    const freshTodos = todos.map(todo => {
-      if(todo.id === id) {
+
+    const 
+
+    setTodos(todos.map(todo => {
+      if (todo.id === id) {
         return updateTodo(todo)
       } else {
         return todo
       }
-    })
-    setTodos(freshTodos)
+    }));
   }
 
   if (todos.length > 4) {
@@ -74,84 +82,7 @@ function TodoWidget() {
           itemType: "action"
         },
       ],
-      (e) => setTodos([])
-    )
-  }
-
-  const Todo = (props: TodoProps) => {
-    return (
-      <AutoLayout
-        direction={'horizontal'}
-        verticalAlignItems={'start'}
-        spacing={'auto'}
-        width={'fill-parent'}
-      >
-        <AutoLayout
-          direction={'horizontal'}
-          verticalAlignItems={'start'}
-          spacing={8}
-        >
-          <SVG
-            hidden={props.done || props.outOfScope}
-            onClick={() => handleChange( props.id, "done",  props.done)}
-            src={`
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2.5" y="2.5" width="15" height="15" rx="3.5" fill="white" stroke="#aeaeae"/>
-              </svg>
-            `}
-          />
-          <SVG 
-            hidden={!props.done || props.outOfScope}
-            onClick={() => handleChange( props.id, "done",  props.done)}
-            src={`
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM14.3408 8.74741C14.7536 8.28303 14.7118 7.57195 14.2474 7.15916C13.783 6.74638 13.0719 6.78821 12.6592 7.25259L10.6592 9.50259L9.45183 10.8608L7.7955 9.2045C7.35616 8.76516 6.64384 8.76516 6.2045 9.2045C5.76517 9.64384 5.76517 10.3562 6.2045 10.7955L8.7045 13.2955C8.92359 13.5146 9.22334 13.6336 9.53305 13.6245C9.84275 13.6154 10.135 13.479 10.3408 13.2474L12.3408 10.9974L14.3408 8.74741Z" fill="#4AB393"/>
-              </svg>
-            `}
-          />
-          <Rectangle 
-            hidden={!props.outOfScope}
-            fill={'#f2f2f2'}
-            width={20}
-            height={20}
-          />
-          <TextBlock 
-            fill={ props.outOfScope ?  "#6E6E6E" :  props.done ? "#767676" : "#101010"}
-            fontSize={ props.done ||  props.outOfScope ? 13 : 14}
-            lineHeight={20}
-            width={180}
-            onClick={() => 
-              new Promise((resolve) => {
-                const widget = figma.getNodeById(widgetId)
-                figma.showUI(__uiFiles__.ui, {height: 56, title: 'Edit your todo', position: {y: (widget as WidgetNode).y - 150, x: (widget as WidgetNode).x}})
-                figma.ui.postMessage({ type: 'edit',  id: props.id,  title: props.title, widget })
-              })
-            }
-          >
-            { props.title}
-          </TextBlock>
-        </AutoLayout>
-        <AutoLayout
-          onClick={() => 
-            new Promise((resolve) => {
-              const widget = figma.getNodeById(widgetId)
-              figma.showUI(__uiFiles__.menu, {height: 85, width: 180, title: 'Menu', position: {y: (widget as WidgetNode).y - 58, x: (widget as WidgetNode).x + (widget as WidgetNode).width + 7}})
-              figma.ui.postMessage({ type: 'menu',  id: props.id,  title: props.title,  outOfScope: props.outOfScope, widget })
-            })
-          }
-          fill={props.outOfScope ? "#f2f2f2" : "#fff"}      
-        >
-          <SVG
-            src={`
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1.6" y="8" width="4" height="4" rx="2" fill="#949494"/>
-                <rect x="8" y="8" width="4" height="4" rx="2" fill="#949494"/>
-                <rect x="14.4" y="8" width="4" height="4" rx="2" fill="#949494"/>
-              </svg>
-            `}
-          />
-        </AutoLayout>
-      </AutoLayout>
+      () => setTodos([])
     )
   }
 
@@ -178,11 +109,12 @@ function TodoWidget() {
             .filter(todo => !todo.done && !todo.outOfScope)
             .map(todo => 
               <Todo 
-              key={todo.key} 
-              id={todo.id} 
-              title={todo.title} 
-              done={todo.done} 
-              outOfScope={todo.outOfScope} 
+                key={todo.id} 
+                id={todo.id} 
+                title={todo.title} 
+                done={todo.done} 
+                outOfScope={todo.outOfScope} 
+                handleChange={handleChange}
               />
             )
           }
@@ -226,7 +158,7 @@ function TodoWidget() {
             .filter(todo => todo.done && !todo.outOfScope)
             .map(todo => 
               <Todo 
-                key={todo.key} 
+                key={todo.id} 
                 id={todo.id} 
                 title={todo.title} 
                 done={todo.done} 
@@ -249,7 +181,7 @@ function TodoWidget() {
         {todos.filter(todo => todo.outOfScope)
           .map(todo => 
             <Todo 
-              key={todo.key} 
+              key={todo.id} 
               id={todo.id} 
               title={todo.title} 
               done={todo.done} 
