@@ -3,12 +3,19 @@ const { useSyncedState, useWidgetId, usePropertyMenu, useEffect, AutoLayout, Tex
 import Todo from './Todo'
 import { nanoid as createId } from 'nanoid/non-secure'
 
+interface Todo {
+  id: string
+  title: string
+  done: boolean
+  outOfScope: boolean
+}
+
 function TodoWidget() {
   const widgetId = useWidgetId()
   // const [todos, setTodos] = useSyncedState<any[]>('todos', [])
-  const [uncompletedTodos, setUncompletedTodos] = useSyncedState<any[]>('uncompletedTodos', [])
-  const [completedTodos, setcompletedTodos] = useSyncedState<any[]>('completedTodos', [])
-  const [outOfScopeTodos, setOutOfScopeTodos] = useSyncedState<any[]>('outOfScopeTodos', [])
+  const [uncompletedTodos, setUncompletedTodos] = useSyncedState<Todo[]>('uncompletedTodos', [])
+  const [completedTodos, setcompletedTodos] = useSyncedState<Todo[]>('completedTodos', [])
+  const [outOfScopeTodos, setOutOfScopeTodos] = useSyncedState<Todo[]>('outOfScopeTodos', [])
 
   useEffect(() => {
     figma.ui.onmessage = msg => {
