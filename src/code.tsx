@@ -1,6 +1,7 @@
 const { widget } = figma;
 const {
   useSyncedState,
+  useWidgetNodeId,
   usePropertyMenu,
   useEffect,
   AutoLayout,
@@ -10,8 +11,6 @@ const {
   Rectangle,
 } = widget;
 import { nanoid as createId } from "nanoid/non-secure";
-
-const WIDGETID = figma.widgetId || "1036372982291551669";
 
 interface Todo {
   id: string;
@@ -38,6 +37,7 @@ type TodoEditEvent = {
 } & (TodoEditTitleEvent | TodoEditDoneEvent | TodoEditOutOfScopeEvent);
 
 function TodoWidget() {
+  const widgetId = useWidgetNodeId();
   const [todos, setTodos] = useSyncedState<Todo[]>("todos", []);
   const [title, setTitle] = useSyncedState<string>("title", "");
   const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", false);
@@ -195,11 +195,11 @@ function TodoWidget() {
         <AutoLayout
           onClick={() =>
             new Promise(() => {
-              const widget = figma.getNodeById(WIDGETID);
+              const widget = figma.getNodeById(widgetId);
               figma.showUI(__uiFiles__.menu, {
                 height: 85,
-                width: 180,
-                title: "",
+                width: 220,
+                title,
                 position: {
                   y: (widget as WidgetNode).y - 58,
                   x:
@@ -240,14 +240,13 @@ function TodoWidget() {
           direction="vertical"
           verticalAlignItems="center"
           horizontalAlignItems="center"
-          fill="#eee"
         >
           <Input
             value={title}
             placeholder="Add a title..."
-            fill="#111"
+            fill="#222"
             fontWeight={700}
-            fontSize={20}
+            fontSize={19.8}
             lineHeight={24}
             horizontalAlignText="center"
             width="fill-parent"
@@ -286,24 +285,7 @@ function TodoWidget() {
               verticalAlignItems={"center"}
               spacing={8}
               fill={"#fff"}
-              onClick={() =>
-                new Promise((resolve) => {
-                  const id = createId();
-                  const widget = figma.getNodeById(WIDGETID);
-
-                  createTodo(id);
-
-                  figma.showUI(__uiFiles__.ui, {
-                    height: 56,
-                    title: "Add a todo",
-                    position: {
-                      y: (widget as WidgetNode).y - 150,
-                      x: (widget as WidgetNode).x,
-                    },
-                  });
-                  figma.ui.postMessage({ type: "add", id, widget });
-                })
-              }
+              onClick={() => createTodo(createId())}
             >
               <SVG
                 src={`
