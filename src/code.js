@@ -115,7 +115,8 @@ function TodoWidget() {
                             },
                         });
                         figma.ui.postMessage({ type: "edit", id, title });
-                    }) }, title)),
+                    }) }, title),
+                figma.widget.h(Input, { value: title, onTextEditEnd: (e) => updateTodo({ id, field: 'title', value: e.characters }) })),
             figma.widget.h(AutoLayout, { onClick: () => new Promise(() => {
                     const widget = figma.getNodeById(WIDGETID);
                     figma.showUI(__uiFiles__.menu, {

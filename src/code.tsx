@@ -1,4 +1,3 @@
-import { nanoid as createId } from "nanoid/non-secure";
 const { widget } = figma;
 const {
   useSyncedState,
@@ -10,6 +9,8 @@ const {
   SVG,
   Rectangle,
 } = widget;
+import { nanoid as createId } from "nanoid/non-secure";
+import { addTitleIcon, removeTitleIcon, crumpledPaperIcon } from "./icons";
 
 const WIDGETID = figma.widgetId || "1036372982291551669";
 
@@ -20,27 +21,27 @@ interface Todo {
   outOfScope: boolean;
 }
 
-interface TodoTitleChange {
+interface TodoEditTitleEvent {
   field: "title";
   value: string;
 }
 
-interface TodoDoneChange {
+interface TodoEditDoneEvent {
   field: "done";
 }
 
-interface TodoOutOfScopeChange {
+interface TodoEditOutOfScopeEvent {
   field: "outOfScope";
 }
 
-type TodoChange = { 
-  id: string 
-} & (TodoTitleChange | TodoDoneChange | TodoOutOfScopeChange);
+type TodoEditEvent = {
+  id: string;
+} & (TodoEditTitleEvent | TodoEditDoneEvent | TodoEditOutOfScopeEvent);
 
 function TodoWidget() {
   const [todos, setTodos] = useSyncedState<Todo[]>("todos", []);
   const [title, setTitle] = useSyncedState<string>("title", "");
-  const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", true);
+  const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", false);
 
   useEffect(() => {
     figma.ui.onmessage = ({ type, id, title }) => {
@@ -74,16 +75,13 @@ function TodoWidget() {
       },
     ]);
 
-  function updateTodo(changedTodo: TodoChange) {
+  function updateTodo(editedTodo: TodoEditEvent) {
     const updatedTodo = (todo: Todo) => {
-      if (
-        changedTodo.field === "title" && 
-        "value" in changedTodo
-      ) {
-        return { ...todo, title: changedTodo.value };
-      } else if (changedTodo.field === "done") {
+      if (editedTodo.field === "title" && "value" in editedTodo) {
+        return { ...todo, title: editedTodo.value };
+      } else if (editedTodo.field === "done") {
         return { ...todo, done: !todo.done };
-      } else if (changedTodo.field === "outOfScope") {
+      } else if (editedTodo.field === "outOfScope") {
         return { ...todo, outOfScope: !todo.outOfScope };
       }
       return todo;
@@ -91,21 +89,23 @@ function TodoWidget() {
 
     setTodos(
       todos.map((todo) =>
-        todo.id === changedTodo.id ? updatedTodo(todo) : todo
+        todo.id === editedTodo.id ? updatedTodo(todo) : todo
       )
     );
   }
 
-  const titleActionItem: WidgetPropertyMenuActionItem = title
+  const titleActionItem: WidgetPropertyMenuActionItem = hasTitle
     ? {
         tooltip: "Remove Title",
         propertyName: "remove-title",
         itemType: "action",
+        icon: removeTitleIcon,
       }
     : {
         tooltip: "Add Title",
         propertyName: "add-title",
         itemType: "action",
+        icon: addTitleIcon,
       };
 
   const propertyMenuItems: WidgetPropertyMenuItem[] =
@@ -116,9 +116,10 @@ function TodoWidget() {
             itemType: "separator",
           },
           {
-            tooltip: "Clear All",
+            tooltip: "Clear everything",
             propertyName: "clear-all",
             itemType: "action",
+            icon: crumpledPaperIcon,
           },
         ]
       : [titleActionItem];
@@ -132,6 +133,7 @@ function TodoWidget() {
         break;
       case "add-title":
         setHasTitle(true);
+        setTitle("");
         break;
       case "remove-title":
         setHasTitle(false);
@@ -178,29 +180,20 @@ function TodoWidget() {
             width={20}
             height={20}
           />
-          <TextBlock
+          <Input
             fill={outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010"}
             fontSize={done || outOfScope ? 13 : 14}
             lineHeight={20}
-            width={180}
-            onClick={() =>
-              new Promise(() => {
-                const widget = figma.getNodeById(WIDGETID);
-                figma.showUI(__uiFiles__.ui, {
-                  height: 56,
-                  title: "Edit your todo",
-                  position: {
-                    y: (widget as WidgetNode).y - 150,
-                    x: (widget as WidgetNode).x,
-                  },
-                });
-
-                figma.ui.postMessage({ type: "edit", id, title });
-              })
-            }
-          >
-            {title}
-          </TextBlock>
+            width={220}
+            value={title}
+            onTextEditEnd={(e: TextEditEvent) => {
+              if (e.characters === "") {
+                deleteTodo(id)
+              } else {
+                updateTodo({ id, field: "title", value: e.characters })
+              }
+            }}
+          />
         </AutoLayout>
         <AutoLayout
           onClick={() =>
@@ -225,9 +218,9 @@ function TodoWidget() {
           <SVG
             src={`
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1.6" y="8" width="4" height="4" rx="2" fill="#949494"/>
-                <rect x="8" y="8" width="4" height="4" rx="2" fill="#949494"/>
-                <rect x="14.4" y="8" width="4" height="4" rx="2" fill="#949494"/>
+                <rect x="1.6" y="8" width="4" height="4" rx="2" fill="#A5A5A5"/>
+                <rect x="8" y="8" width="4" height="4" rx="2" fill="#A5A5A5"/>
+                <rect x="14.4" y="8" width="4" height="4" rx="2" fill="#A5A5A5"/>
               </svg>
             `}
           />
@@ -245,29 +238,32 @@ function TodoWidget() {
       stroke={"#e7e7e7"}
     >
       {hasTitle && (
-        <Input
-          value={title}
-          placeholder="Add a title..."
-          inputBehavior="multiline"
-          fill="#000"
-          fontWeight={700}
-          fontSize={17}
-          inputFrameProps={{
-            effect: {
-              type: "drop-shadow",
-              color: { r: 0, g: 0, b: 0, a: 0.2 },
-              offset: { x: 0, y: 0 },
-              blur: 2,
-              spread: 2,
-            },
-            fill: "#FFFFFF",
-            horizontalAlignItems: "center",
-            padding: 8,
-            verticalAlignItems: "center",
-          }}
+        <AutoLayout
           width="fill-parent"
-          onTextEditEnd={(e: TextEditEvent) => setTitle(e.characters)}
-        />
+          direction="vertical"
+          verticalAlignItems="center"
+          horizontalAlignItems="center"
+          fill="#eee"
+        >
+          <Input
+            value={title}
+            placeholder="Add a title..."
+            fill="#111"
+            fontWeight={700}
+            fontSize={20}
+            lineHeight={24}
+            horizontalAlignText="center"
+            width="fill-parent"
+            letterSpacing={-0.15}
+            inputFrameProps={{
+              fill: "#FFFFFF",
+              horizontalAlignItems: "center",
+              padding: { left: 49, right: 49, top: 24, bottom: 4 },
+              verticalAlignItems: "center",
+            }}
+            onTextEditEnd={(e: TextEditEvent) => setTitle(e.characters)}
+          />
+        </AutoLayout>
       )}
       <AutoLayout
         direction={"vertical"}

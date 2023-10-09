@@ -8,8 +8,10 @@ let id: string
 
 onmessage = (event) => {
   const msg = event.data.pluginMessage
+  
   widget = msg.widget
   id = msg.id
+
   if (msg.type === 'edit') {
     textbox.value = msg.title
     textbox.select()

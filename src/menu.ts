@@ -4,10 +4,13 @@ const deleteBtn = <HTMLButtonElement>document.getElementById('delete-btn')
 const moveOutBtn = <HTMLButtonElement>document.getElementById('move-out-btn')
 const moveInBtn = <HTMLButtonElement>document.getElementById('move-in-btn')
 
+let widget;
 let id: string
 
 onmessage = (event) => {
   const msg = event.data.pluginMessage
+  
+  widget = msg.widget
   id = msg.id
 
   if (msg.outOfScope === true) {
