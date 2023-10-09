@@ -20,44 +20,39 @@ interface Todo {
 }
 
 interface TodoTitleChange {
-  changedProp: "title";
-  changedPropValue: string;
+  field: "title";
+  value: string;
 }
 
 interface TodoDoneChange {
-  changedProp: "done";
+  field: "done";
 }
 
 interface TodoOutOfScopeChange {
-  changedProp: "outOfScope";
-  changedPropValue: boolean;
+  field: "outOfScope";
 }
 
 type TodoChange = { 
   id: string 
-} & (
-  | TodoTitleChange
-  | TodoDoneChange
-  | TodoOutOfScopeChange
-);
+} & (TodoTitleChange | TodoDoneChange | TodoOutOfScopeChange);
 
 function TodoWidget() {
   const widgetId = useWidgetId();
   const [todos, setTodos] = useSyncedState<Todo[]>("todos", []);
   const [title, setTitle] = useSyncedState<string>("title", "");
-  const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", false);
+  const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", true);
 
   useEffect(() => {
-    figma.ui.onmessage = (msg) => {
-      switch (msg.type) {
+    figma.ui.onmessage = ({ type, id, title }) => {
+      switch (type) {
         case "update-title":
-          handleChange(msg.id, "title", msg.title);
+          updateTodo({ id, field: "title", value: title });
           break;
         case "flip-todo-scope":
-          handleChange(msg.id, "outOfScope", msg.outOfScope);
+          updateTodo({ id, field: "outOfScope" });
           break;
         case "delete-todo":
-          deleteTodo(msg.id);
+          deleteTodo(id);
           break;
         default:
           figma.closePlugin();
@@ -66,8 +61,7 @@ function TodoWidget() {
     };
   });
 
-  const deleteTodo = (id: string) =>
-    setTodos([...todos.filter((todo) => todo.id !== id)]);
+  const deleteTodo = (id: string) => setTodos(todos.filter((todo) => todo.id !== id));
 
   const createTodo = (id: string) =>
     setTodos([
@@ -80,21 +74,26 @@ function TodoWidget() {
       },
     ]);
 
-  function handleChange({ id, changedProp, changedPropValue }: TodoChange) {
+  function updateTodo(changedTodo: TodoChange) {
     const updatedTodo = (todo: Todo) => {
-      switch (changedProp) {
-        case "title":
-          return { ...todo, title: changedPropValue };
-        case "done":
-          return { ...todo, done: !todo.done };
-        case "outOfScope":
-          return { ...todo, outOfScope: changedPropValue };
-        default:
-          return todo;
+      if (
+        changedTodo.field === "title" && 
+        "value" in changedTodo
+      ) {
+        return { ...todo, title: changedTodo.value };
+      } else if (changedTodo.field === "done") {
+        return { ...todo, done: !todo.done };
+      } else if (changedTodo.field === "outOfScope") {
+        return { ...todo, outOfScope: !todo.outOfScope };
       }
+      return todo;
     };
 
-    setTodos(todos.map((todo) => (todo.id === id ? updatedTodo(todo) : todo)));
+    setTodos(
+      todos.map((todo) =>
+        todo.id === changedTodo.id ? updatedTodo(todo) : todo
+      )
+    );
   }
 
   const titleActionItem: WidgetPropertyMenuActionItem = title
@@ -125,12 +124,19 @@ function TodoWidget() {
       : [titleActionItem];
 
   usePropertyMenu(propertyMenuItems, ({ propertyName }) => {
-    if (propertyName === "clear-all") {
-      setTodos([]);
-    } else if (propertyName === "add-title") {
-      setHasTitle(true);
-    } else if (propertyName === "remove-title") {
-      setHasTitle(false);
+    switch (propertyName) {
+      case "clear-all":
+        setTodos([]);
+        setHasTitle(false);
+        setTitle("");
+        break;
+      case "add-title":
+        setHasTitle(true);
+        break;
+      case "remove-title":
+        setHasTitle(false);
+        setTitle("");
+        break;
     }
   });
 
@@ -150,7 +156,7 @@ function TodoWidget() {
         >
           <SVG
             hidden={done || outOfScope}
-            onClick={() => handleChange(id, "done")}
+            onClick={() => updateTodo({ id, field: "done" })}
             src={`
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2.5" y="2.5" width="15" height="15" rx="3.5" fill="white" stroke="#aeaeae"/>
@@ -159,7 +165,7 @@ function TodoWidget() {
           />
           <SVG
             hidden={!done || outOfScope}
-            onClick={() => handleChange(id, "done")}
+            onClick={() => updateTodo({ id, field: "done" })}
             src={`
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM14.3408 8.74741C14.7536 8.28303 14.7118 7.57195 14.2474 7.15916C13.783 6.74638 13.0719 6.78821 12.6592 7.25259L10.6592 9.50259L9.45183 10.8608L7.7955 9.2045C7.35616 8.76516 6.64384 8.76516 6.2045 9.2045C5.76517 9.64384 5.76517 10.3562 6.2045 10.7955L8.7045 13.2955C8.92359 13.5146 9.22334 13.6336 9.53305 13.6245C9.84275 13.6154 10.135 13.479 10.3408 13.2474L12.3408 10.9974L14.3408 8.74741Z" fill="#4AB393"/>
@@ -188,12 +194,8 @@ function TodoWidget() {
                     x: (widget as WidgetNode).x,
                   },
                 });
-                figma.ui.postMessage({
-                  type: "edit",
-                  id: id,
-                  title: title,
-                  widget,
-                });
+
+                figma.ui.postMessage({ type: "edit", id, title });
               })
             }
           >
@@ -214,13 +216,8 @@ function TodoWidget() {
                     (widget as WidgetNode).x + (widget as WidgetNode).width + 7,
                 },
               });
-              figma.ui.postMessage({
-                type: "menu",
-                id: id,
-                title: title,
-                outOfScope: outOfScope,
-                widget,
-              });
+
+              figma.ui.postMessage({ type: "menu", id, title, outOfScope });
             })
           }
           fill={outOfScope ? "#f2f2f2" : "#fff"}
