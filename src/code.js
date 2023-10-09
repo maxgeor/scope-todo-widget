@@ -1,8 +1,8 @@
 import { nanoid as createId } from "nanoid/non-secure";
 const { widget } = figma;
-const { useSyncedState, useWidgetId, usePropertyMenu, useEffect, AutoLayout, Input, Text: TextBlock, SVG, Rectangle, } = widget;
+const { useSyncedState, usePropertyMenu, useEffect, AutoLayout, Input, Text: TextBlock, SVG, Rectangle, } = widget;
+const WIDGETID = figma.widgetId || "1036372982291551669";
 function TodoWidget() {
-    const widgetId = useWidgetId();
     const [todos, setTodos] = useSyncedState("todos", []);
     const [title, setTitle] = useSyncedState("title", "");
     const [hasTitle, setHasTitle] = useSyncedState("hasTitle", true);
@@ -104,8 +104,8 @@ function TodoWidget() {
               </svg>
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: "#f2f2f2", width: 20, height: 20 }),
-                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 180, onClick: () => new Promise((resolve) => {
-                        const widget = figma.getNodeById(widgetId);
+                figma.widget.h(TextBlock, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 180, onClick: () => new Promise(() => {
+                        const widget = figma.getNodeById(WIDGETID);
                         figma.showUI(__uiFiles__.ui, {
                             height: 56,
                             title: "Edit your todo",
@@ -116,12 +116,12 @@ function TodoWidget() {
                         });
                         figma.ui.postMessage({ type: "edit", id, title });
                     }) }, title)),
-            figma.widget.h(AutoLayout, { onClick: () => new Promise((resolve) => {
-                    const widget = figma.getNodeById(widgetId);
+            figma.widget.h(AutoLayout, { onClick: () => new Promise(() => {
+                    const widget = figma.getNodeById(WIDGETID);
                     figma.showUI(__uiFiles__.menu, {
                         height: 85,
                         width: 180,
-                        title: "Menu",
+                        title: "",
                         position: {
                             y: widget.y - 58,
                             x: widget.x + widget.width + 7,
@@ -138,7 +138,19 @@ function TodoWidget() {
             ` }))));
     };
     return (figma.widget.h(AutoLayout, { direction: "vertical", cornerRadius: 8, fill: "#fff", width: 360, stroke: "#e7e7e7" },
-        hasTitle && (figma.widget.h(Input, { value: title, placeholder: "Add a title...", inputBehavior: "multiline", fontWeight: 700, fontSize: 17, onTextEditEnd: (e) => setTitle(e.characters) })),
+        hasTitle && (figma.widget.h(Input, { value: title, placeholder: "Add a title...", inputBehavior: "multiline", fill: "#000", fontWeight: 700, fontSize: 17, inputFrameProps: {
+                effect: {
+                    type: "drop-shadow",
+                    color: { r: 0, g: 0, b: 0, a: 0.2 },
+                    offset: { x: 0, y: 0 },
+                    blur: 2,
+                    spread: 2,
+                },
+                fill: "#FFFFFF",
+                horizontalAlignItems: "center",
+                padding: 8,
+                verticalAlignItems: "center",
+            }, width: "fill-parent", onTextEditEnd: (e) => setTitle(e.characters) })),
         figma.widget.h(AutoLayout, { direction: "vertical", spacing: 24, padding: 24, width: "fill-parent" },
             figma.widget.h(AutoLayout, { direction: "vertical", spacing: 8, width: "fill-parent" },
                 todos
@@ -147,7 +159,7 @@ function TodoWidget() {
                 figma.widget.h(AutoLayout, { width: "fill-parent" },
                     figma.widget.h(AutoLayout, { direction: "horizontal", verticalAlignItems: "center", spacing: 8, fill: "#fff", onClick: () => new Promise((resolve) => {
                             const id = createId();
-                            const widget = figma.getNodeById(widgetId);
+                            const widget = figma.getNodeById(WIDGETID);
                             createTodo(id);
                             figma.showUI(__uiFiles__.ui, {
                                 height: 56,

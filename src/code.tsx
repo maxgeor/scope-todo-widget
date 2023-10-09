@@ -2,7 +2,6 @@ import { nanoid as createId } from "nanoid/non-secure";
 const { widget } = figma;
 const {
   useSyncedState,
-  useWidgetId,
   usePropertyMenu,
   useEffect,
   AutoLayout,
@@ -11,6 +10,8 @@ const {
   SVG,
   Rectangle,
 } = widget;
+
+const WIDGETID = figma.widgetId || "1036372982291551669";
 
 interface Todo {
   id: string;
@@ -37,7 +38,6 @@ type TodoChange = {
 } & (TodoTitleChange | TodoDoneChange | TodoOutOfScopeChange);
 
 function TodoWidget() {
-  const widgetId = useWidgetId();
   const [todos, setTodos] = useSyncedState<Todo[]>("todos", []);
   const [title, setTitle] = useSyncedState<string>("title", "");
   const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", true);
@@ -184,8 +184,8 @@ function TodoWidget() {
             lineHeight={20}
             width={180}
             onClick={() =>
-              new Promise((resolve) => {
-                const widget = figma.getNodeById(widgetId);
+              new Promise(() => {
+                const widget = figma.getNodeById(WIDGETID);
                 figma.showUI(__uiFiles__.ui, {
                   height: 56,
                   title: "Edit your todo",
@@ -204,12 +204,12 @@ function TodoWidget() {
         </AutoLayout>
         <AutoLayout
           onClick={() =>
-            new Promise((resolve) => {
-              const widget = figma.getNodeById(widgetId);
+            new Promise(() => {
+              const widget = figma.getNodeById(WIDGETID);
               figma.showUI(__uiFiles__.menu, {
                 height: 85,
                 width: 180,
-                title: "Menu",
+                title: "",
                 position: {
                   y: (widget as WidgetNode).y - 58,
                   x:
@@ -249,8 +249,23 @@ function TodoWidget() {
           value={title}
           placeholder="Add a title..."
           inputBehavior="multiline"
+          fill="#000"
           fontWeight={700}
           fontSize={17}
+          inputFrameProps={{
+            effect: {
+              type: "drop-shadow",
+              color: { r: 0, g: 0, b: 0, a: 0.2 },
+              offset: { x: 0, y: 0 },
+              blur: 2,
+              spread: 2,
+            },
+            fill: "#FFFFFF",
+            horizontalAlignItems: "center",
+            padding: 8,
+            verticalAlignItems: "center",
+          }}
+          width="fill-parent"
           onTextEditEnd={(e: TextEditEvent) => setTitle(e.characters)}
         />
       )}
@@ -281,8 +296,8 @@ function TodoWidget() {
               onClick={() =>
                 new Promise((resolve) => {
                   const id = createId();
-                  const widget = figma.getNodeById(widgetId);
-                  
+                  const widget = figma.getNodeById(WIDGETID);
+
                   createTodo(id);
 
                   figma.showUI(__uiFiles__.ui, {
