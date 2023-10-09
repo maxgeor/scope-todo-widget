@@ -132,11 +132,9 @@ function TodoWidget() {
         break;
       case "add-title":
         setHasTitle(true);
-        setTitle("");
         break;
       case "remove-title":
         setHasTitle(false);
-        setTitle("");
         break;
     }
   });
