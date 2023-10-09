@@ -108,7 +108,7 @@ function TodoWidget() {
       };
 
   const propertyMenuItems: WidgetPropertyMenuItem[] =
-    todos.length > 4
+    todos.length > 3
       ? [
           titleActionItem,
           {
@@ -185,9 +185,9 @@ function TodoWidget() {
             value={title}
             onTextEditEnd={(e: TextEditEvent) => {
               if (e.characters === "") {
-                deleteTodo(id)
+                deleteTodo(id);
               } else {
-                updateTodo({ id, field: "title", value: e.characters })
+                updateTodo({ id, field: "title", value: e.characters });
               }
             }}
           />
