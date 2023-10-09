@@ -197,7 +197,8 @@ function TodoWidget() {
             new Promise(() => {
               const widget = figma.getNodeById(widgetId);
               figma.showUI(__uiFiles__.menu, {
-                height: 85,
+                // height: 85,
+                height: 154,
                 width: 220,
                 title,
                 position: {
@@ -231,7 +232,7 @@ function TodoWidget() {
       direction={"vertical"}
       cornerRadius={8}
       fill={"#fff"}
-      width={360}
+      width={400}
       stroke={"#e7e7e7"}
     >
       {hasTitle && (
@@ -286,6 +287,22 @@ function TodoWidget() {
               spacing={8}
               fill={"#fff"}
               onClick={() => createTodo(createId())}
+              // onClick={() =>
+              //   new Promise(() => {
+              //     const id = createId();
+              //     const widget = figma.getNodeById(widgetId);
+
+              //     figma.showUI(__uiFiles__.ui, {
+              //       height: 56,
+              //       title: "Add a todo",
+              //       position: {
+              //         y: (widget as WidgetNode).y - 150,
+              //         x: (widget as WidgetNode).x,
+              //       },
+              //     });
+              //     figma.ui.postMessage({ type: "add", id, widget });
+              //   })
+              // }
             >
               <SVG
                 src={`

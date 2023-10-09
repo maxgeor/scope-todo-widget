@@ -8,7 +8,13 @@ body {
 section {
   display: flex;
   flex-direction: column;
-  margin: 4px 0;
+  margin: 6px 0;
+}
+
+hr {
+  margin: 6px 0;
+  border: none;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 button {
@@ -20,7 +26,8 @@ button {
 	outline: inherit;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 8px 12px;
+  line-height: 16px;
   width: 220px;
 }
 
@@ -29,7 +36,7 @@ button {
 }
 
 button > * {
-  margin-right: 8px;
+  margin-right: 9px;
   pointer-events: none
 }
 
