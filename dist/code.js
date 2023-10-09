@@ -10,8 +10,8 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "nanoid": () => (/* binding */ nanoid),
-/* harmony export */   "customAlphabet": () => (/* binding */ customAlphabet)
+/* harmony export */   customAlphabet: () => (/* binding */ customAlphabet),
+/* harmony export */   nanoid: () => (/* binding */ nanoid)
 /* harmony export */ });
 let urlAlphabet =
   'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict'
