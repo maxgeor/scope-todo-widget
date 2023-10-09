@@ -10,8 +10,8 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "@figma/plugin-typings": "^1.43.0",
-    "@figma/widget-typings": "^1.0.3",
+    "@figma/plugin-typings": "^1.79.0",
+    "@figma/widget-typings": "^1.9.1",
     "@types/node": "^16.11.6",
     "@types/uuid": "^8.3.1",
     "css-loader": "^6.5.1",
@@ -25,6 +25,7 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
+    "figma": "^0.0.1",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2"
   }
