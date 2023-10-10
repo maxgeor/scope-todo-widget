@@ -61,7 +61,8 @@ function TodoWidget() {
     };
   });
 
-  const deleteTodo = (id: string) => setTodos(todos.filter((todo) => todo.id !== id));
+  const deleteTodo = (id: string) =>
+    setTodos(todos.filter((todo) => todo.id !== id));
 
   const createTodo = (id: string) =>
     setTodos([
@@ -86,11 +87,12 @@ function TodoWidget() {
       return todo;
     };
 
-    setTodos(
-      todos.map((todo) =>
-        todo.id === editedTodo.id ? updatedTodo(todo) : todo
-      )
-    );
+    const updatedTodos = todos.filter((todo) => todo.id !== editedTodo.id);
+    const todo = todos.find((todo) => todo.id === editedTodo.id);
+    if (todo) {
+      updatedTodos.push(updatedTodo(todo));
+      setTodos(updatedTodos);
+    }
   }
 
   const titleActionItem: WidgetPropertyMenuActionItem = hasTitle
