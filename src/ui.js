@@ -20,6 +20,11 @@ const handleClose = (title) => {
         parent.postMessage({ pluginMessage: { type: 'close-plugin' } }, '*');
     }
 };
+window.addEventListener('click', (event) => {
+    if (event.target != document.body) {
+        handleClose(textbox.value);
+    }
+});
 textbox.addEventListener('blur', () => {
     const title = textbox.value;
     handleClose(title);

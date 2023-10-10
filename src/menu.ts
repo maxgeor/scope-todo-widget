@@ -13,8 +13,17 @@ onmessage = (event) => {
   id = msg.id
 
   if (msg.outOfScope === true) {
-    moveInBtn.style.display = 'flex'
     moveOutBtn.style.display = 'none'
+    moveInBtn.style.display = 'flex'
+  }
+
+  if (msg.pileSize === 1) {
+    moveUpBtn.disabled = true;
+    moveDownBtn.disabled = true;
+  } else if (msg.index === 0) {
+    moveUpBtn.disabled = true;
+  } else if (msg.index === msg.length - 1) {
+    moveDownBtn.disabled = true;
   }
 }
 
@@ -29,10 +38,11 @@ document.addEventListener('click', (e) => {
       break;
     case moveUpBtn:
       parent.postMessage({ pluginMessage: { type: 'move-todo-up', id } }, '*');
-      case moveDownBtn:
+      break;
+    case moveDownBtn:
       parent.postMessage({ pluginMessage: { type: 'move-todo-down', id } }, '*');
-    case moveOutBtn || moveInBtn:
-    case moveInBtn:
+      break;
+    case (moveOutBtn || moveInBtn):
       parent.postMessage({ pluginMessage: { type: 'flip-todo-scope', id } }, '*');
       handleClose();
       break;

@@ -22,7 +22,7 @@ button {
 	color: inherit;
 	border: none;
 	font: inherit;
-	cursor: pointer;
+	cursor: default;
 	outline: inherit;
   display: flex;
   align-items: center;
@@ -42,5 +42,16 @@ button > * {
 
 button:hover {
   background: #f5f5f5;
+}
+
+button:disabled,
+button[disabled] {
+  opacity: 30%;
+  cursor: default;
+}
+
+button:disabled:hover,
+button[disabled][hover] {
+  background: none;
 }
 

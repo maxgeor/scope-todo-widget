@@ -38,15 +38,33 @@ type TodoEditEvent = {
 
 function TodoWidget() {
   const widgetId = useWidgetNodeId();
-  const [todos, setTodos] = useSyncedState<Todo[]>("todos", []);
+  
+  const [todos, setTodos] = useSyncedState<Todo[]>("todos", []); // Legacy
+  const [completedTodos, setCompletedTodos] = useSyncedState<Todo[]>("completedTodos", []);
+  const [uncompletedTodos, setUncompletedTodos] = useSyncedState<Todo[]>("uncompletedTodos", []);
+  const [outOfScopeTodos, setOutOfScopeTodos] = useSyncedState<Todo[]>("outOfScopeTodos", []);
+
   const [title, setTitle] = useSyncedState<string>("title", "");
   const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", false);
 
   useEffect(() => {
+    // if (todos.length) {
+    //   setCompletedTodos(todos.filter((todo) => todo.done));
+    //   setUncompletedTodos(todos.filter((todo) => !todo.done && !todo.outOfScope));
+    //   setOutOfScopeTodos(todos.filter((todo) => todo.outOfScope));
+    //   setTodos([]);
+    // };
+
     figma.ui.onmessage = ({ type, id, title }) => {
       switch (type) {
         case "update-title":
           updateTodo({ id, field: "title", value: title });
+          break;
+        case "move-todo-up":
+          // updateTodo({ id, field: "title", value: title });
+          break;
+        case "move-todo-down":
+          // updateTodo({ id, field: "title", value: title });
           break;
         case "flip-todo-scope":
           updateTodo({ id, field: "outOfScope" });
@@ -76,23 +94,26 @@ function TodoWidget() {
     ]);
 
   function updateTodo(editedTodo: TodoEditEvent) {
-    const updatedTodo = (todo: Todo) => {
-      if (editedTodo.field === "title" && "value" in editedTodo) {
-        return { ...todo, title: editedTodo.value };
-      } else if (editedTodo.field === "done") {
-        return { ...todo, done: !todo.done };
-      } else if (editedTodo.field === "outOfScope") {
-        return { ...todo, outOfScope: !todo.outOfScope };
-      }
-      return todo;
-    };
-
-    const updatedTodos = todos.filter((todo) => todo.id !== editedTodo.id);
-    const todo = todos.find((todo) => todo.id === editedTodo.id);
-    if (todo) {
-      updatedTodos.push(updatedTodo(todo));
-      setTodos(updatedTodos);
+    if (editedTodo.field === "title" && "value" in editedTodo) {
+      return setTodos(
+        todos.map((todo) =>
+          todo.id === editedTodo.id
+            ? { ...todo, title: editedTodo.value }
+            : todo
+        )
+      );
     }
+
+    const todo = todos.find((todo) => todo.id === editedTodo.id);
+    const rest = todos.filter((todo) => todo.id !== editedTodo.id);
+    
+    if (!todo) return;
+    
+    if (editedTodo.field === "outOfScope") {
+      setTodos([...rest, { ...todo, outOfScope: !todo.outOfScope }]);
+    } else if (editedTodo.field === "done") {
+      setTodos([...rest, { ...todo, done: !todo.done }]);
+    } 
   }
 
   const titleActionItem: WidgetPropertyMenuActionItem = hasTitle
@@ -141,7 +162,9 @@ function TodoWidget() {
     }
   });
 
-  const Todo = ({ id, done, title, outOfScope }: Todo) => {
+  const Todo = (todo: Todo) => {
+    const { id, done, title, outOfScope } = todo;
+
     return (
       <AutoLayout
         key={id}
@@ -199,7 +222,6 @@ function TodoWidget() {
             new Promise(() => {
               const widget = figma.getNodeById(widgetId);
               figma.showUI(__uiFiles__.menu, {
-                // height: 85,
                 height: 154,
                 width: 220,
                 title,
@@ -210,7 +232,24 @@ function TodoWidget() {
                 },
               });
 
-              figma.ui.postMessage({ type: "menu", id, title, outOfScope });
+              let todoPile;
+
+              if (outOfScope) {
+                todoPile = todos.filter(({ outOfScope }) => outOfScope);
+              } else if (done) { 
+                todoPile = todos.filter(({ done }) => done);
+              } else {
+                todoPile = todos.filter(({ done, outOfScope }) => !done && !outOfScope);
+              }
+
+              figma.ui.postMessage({
+                type: "menu",
+                id,
+                title,
+                outOfScope,
+                index: todoPile.indexOf(todo),
+                pileSize: todoPile.length,
+              });
             })
           }
           fill={outOfScope ? "#f2f2f2" : "#fff"}
@@ -246,18 +285,18 @@ function TodoWidget() {
         >
           <Input
             value={title}
-            placeholder="Add a title..."
+            placeholder="Write a title..."
             fill="#222"
             fontWeight={700}
             fontSize={19.8}
             lineHeight={24}
             horizontalAlignText="center"
-            width="fill-parent"
+            width={290}
             letterSpacing={-0.15}
             inputFrameProps={{
               fill: "#FFFFFF",
               horizontalAlignItems: "center",
-              padding: { left: 49, right: 49, top: 24 },
+              padding: { top: 24 },
               verticalAlignItems: "center",
             }}
             onTextEditEnd={(e: TextEditEvent) => setTitle(e.characters)}
