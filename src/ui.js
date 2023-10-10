@@ -1,16 +1,10 @@
 import './ui.css';
 const textbox = document.getElementById('textbox');
 textbox.focus();
-let widget;
 let id;
 onmessage = (event) => {
-    const msg = event.data.pluginMessage;
-    widget = msg.widget;
-    id = msg.id;
-    if (msg.type === 'edit') {
-        textbox.value = msg.title;
-        textbox.select();
-    }
+    const { id: widgetId } = event.data.pluginMessage;
+    id = widgetId;
 };
 const handleClose = (title) => {
     if (title === '') {
@@ -24,11 +18,9 @@ window.addEventListener('click', (event) => {
     if (event.target != document.body) {
         handleClose(textbox.value);
     }
+    ;
 });
-textbox.addEventListener('blur', () => {
-    const title = textbox.value;
-    handleClose(title);
-});
+textbox.addEventListener('blur', () => handleClose(textbox.value));
 textbox.addEventListener('keyup', (e) => {
     const title = textbox.value;
     if (e.key === 'Enter' || e.key === 'Escape') {

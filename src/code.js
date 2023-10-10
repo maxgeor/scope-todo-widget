@@ -3,7 +3,7 @@ const { useSyncedState, useWidgetNodeId, usePropertyMenu, useEffect, AutoLayout,
 import { nanoid as createId } from "nanoid/non-secure";
 function TodoWidget() {
     const widgetId = useWidgetNodeId();
-    const [todos, setTodos] = useSyncedState("todos", []);
+    const [todos, setTodos] = useSyncedState("todos", []); // Legacy
     const [title, setTitle] = useSyncedState("title", "");
     const [hasTitle, setHasTitle] = useSyncedState("hasTitle", false);
     useEffect(() => {
@@ -12,17 +12,12 @@ function TodoWidget() {
                 case "update-title":
                     updateTodo({ id, field: "title", value: title });
                     break;
-                case "move-todo-up":
-                    // updateTodo({ id, field: "title", value: title });
-                    break;
-                case "move-todo-down":
-                    // updateTodo({ id, field: "title", value: title });
-                    break;
                 case "flip-todo-scope":
                     updateTodo({ id, field: "outOfScope" });
                     break;
                 case "delete-todo":
                     deleteTodo(id);
+                    figma.closePlugin();
                     break;
                 default:
                     figma.closePlugin();
@@ -50,7 +45,7 @@ function TodoWidget() {
         if (!todo)
             return;
         if (editedTodo.field === "outOfScope") {
-            setTodos([...rest, Object.assign(Object.assign({}, todo), { done: !todo.outOfScope })]);
+            setTodos([...rest, Object.assign(Object.assign({}, todo), { outOfScope: !todo.outOfScope })]);
         }
         else if (editedTodo.field === "done") {
             setTodos([...rest, Object.assign(Object.assign({}, todo), { done: !todo.done })]);
@@ -114,17 +109,15 @@ function TodoWidget() {
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: "#f2f2f2", width: 20, height: 20 }),
                 figma.widget.h(Input, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 220, value: title, onTextEditEnd: (e) => {
-                        if (e.characters === "") {
-                            deleteTodo(id);
-                        }
-                        else {
-                            updateTodo({ id, field: "title", value: e.characters });
-                        }
+                        e.characters === ""
+                            ? deleteTodo(id)
+                            : updateTodo({ id, field: "title", value: e.characters });
                     } })),
-            figma.widget.h(AutoLayout, { onClick: () => new Promise(() => {
+            figma.widget.h(AutoLayout, { fill: outOfScope ? "#f2f2f2" : "#fff", onClick: () => new Promise(() => {
                     const widget = figma.getNodeById(widgetId);
                     figma.showUI(__uiFiles__.menu, {
-                        height: 154,
+                        height: 76,
+                        // height: 154,
                         width: 220,
                         title,
                         position: {
@@ -132,15 +125,24 @@ function TodoWidget() {
                             x: widget.x + widget.width + 7,
                         },
                     });
-                    figma.ui.postMessage({
-                        type: "menu",
-                        id,
-                        title,
-                        outOfScope,
-                        index: todos.indexOf(todo),
-                        todosLength: todos.length
-                    });
-                }), fill: outOfScope ? "#f2f2f2" : "#fff" },
+                    figma.ui.postMessage({ type: "menu", id, title, outOfScope });
+                    // let todoPile;
+                    // if (outOfScope) {
+                    //   todoPile = todos.filter(({ outOfScope }) => outOfScope);
+                    // } else if (done) {
+                    //   todoPile = todos.filter(({ done }) => done);
+                    // } else {
+                    //   todoPile = todos.filter(({ done, outOfScope }) => !done && !outOfScope);
+                    // }
+                    // figma.ui.postMessage({
+                    //   type: "menu",
+                    //   id,
+                    //   title,
+                    //   outOfScope,
+                    //   index: todoPile.indexOf(todo),
+                    //   pileSize: todoPile.length,
+                    // });
+                }) },
                 figma.widget.h(SVG, { src: `
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="1.6" y="8" width="4" height="4" rx="2" fill="#A5A5A5"/>
@@ -163,7 +165,20 @@ function TodoWidget() {
                     .filter(({ done, outOfScope }) => !done && !outOfScope)
                     .map(({ id, title, done, outOfScope }) => (figma.widget.h(Todo, { key: id, id: id, title: title, done: done, outOfScope: outOfScope }))),
                 figma.widget.h(AutoLayout, { width: "fill-parent" },
-                    figma.widget.h(AutoLayout, { direction: "horizontal", verticalAlignItems: "center", spacing: 8, fill: "#fff", onClick: () => createTodo(createId()) },
+                    figma.widget.h(AutoLayout, { direction: "horizontal", verticalAlignItems: "center", spacing: 8, fill: "#fff", onClick: () => new Promise(() => {
+                            const id = createId();
+                            const widget = figma.getNodeById(widgetId);
+                            createTodo(id);
+                            figma.showUI(__uiFiles__.ui, {
+                                height: 56,
+                                title: "Add a todo",
+                                position: {
+                                    y: widget.y - 150,
+                                    x: widget.x,
+                                },
+                            });
+                            figma.ui.postMessage({ type: "add", id, widget });
+                        }) },
                         figma.widget.h(SVG, { src: `
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M10.125 5C10.7463 5 11.25 5.44772 11.25 6V14C11.25 14.5523 10.7463 15 10.125 15C9.50368 15 9 14.5523 9 14V6C9 5.44772 9.50368 5 10.125 5Z" fill="#949494"/>
