@@ -188,6 +188,7 @@ function TodoWidget() {
             lineHeight={20}
             width={240}
             value={title}
+            placeholder="I need to..."
             onTextEditEnd={(e: TextEditEvent) => {
               e.characters === "" 
                 ? deleteTodo(id) 
@@ -289,24 +290,25 @@ function TodoWidget() {
               verticalAlignItems={"center"}
               spacing={8}
               fill={"#fff"}
-              onClick={() =>
-                new Promise(() => {
-                  const id = createId();
-                  const widget = figma.getNodeById(widgetId);
+              onClick={() => createTodo(createId())}
+              // onClick={() =>
+              //   new Promise(() => {
+              //     const id = createId();
+              //     const widget = figma.getNodeById(widgetId);
 
-                  createTodo(id);
+              //     createTodo(id);
 
-                  figma.showUI(__uiFiles__.ui, {
-                    height: 56,
-                    title: "Add a todo",
-                    position: {
-                      y: (widget as WidgetNode).y - 150,
-                      x: (widget as WidgetNode).x,
-                    },
-                  });
-                  figma.ui.postMessage({ type: "add", id, widget });
-                })
-              }
+              //     figma.showUI(__uiFiles__.ui, {
+              //       height: 56,
+              //       title: "Add a todo",
+              //       position: {
+              //         y: (widget as WidgetNode).y - 150,
+              //         x: (widget as WidgetNode).x,
+              //       },
+              //     });
+              //     figma.ui.postMessage({ type: "add", id, widget });
+              //   })
+              // }
             >
               <SVG
                 src={`
