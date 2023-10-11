@@ -254,7 +254,7 @@ function TodoWidget() {
           <Input
             value={title}
             placeholder="Add a title..."
-            fill="#222"
+            fill="#2A2A2A"
             fontWeight={700}
             fontSize={19.8}
             lineHeight={24}
