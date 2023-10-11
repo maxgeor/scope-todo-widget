@@ -190,6 +190,8 @@ function TodoWidget() {
             value={title}
             placeholder="I need to..."
             placeholderProps={{ 
+              fill: '#b7b7b7',
+              opacity: 1,
               letterSpacing: -0.15,
             }}
             onTextEditEnd={(e: TextEditEvent) => {
@@ -204,7 +206,7 @@ function TodoWidget() {
           onClick={() =>
             new Promise(() => {
               const widget = figma.getNodeById(widgetId);
-              figma.showUI(__uiFiles__.ui, {
+              figma.showUI(__html__, {
                 height: 76,
                 // height: 154,
                 width: 220,

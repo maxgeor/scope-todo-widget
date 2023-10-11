@@ -107,6 +107,8 @@ function TodoWidget() {
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: "#f2f2f2", width: 20, height: 20 }),
                 figma.widget.h(Input, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 240, value: title, placeholder: "I need to...", placeholderProps: {
+                        fill: '#b7b7b7',
+                        opacity: 1,
                         letterSpacing: -0.15,
                     }, onTextEditEnd: (e) => {
                         e.characters === ""
@@ -115,7 +117,7 @@ function TodoWidget() {
                     } })),
             figma.widget.h(AutoLayout, { fill: outOfScope ? "#f2f2f2" : "#fff", onClick: () => new Promise(() => {
                     const widget = figma.getNodeById(widgetId);
-                    figma.showUI(__uiFiles__.ui, {
+                    figma.showUI(__html__, {
                         height: 76,
                         // height: 154,
                         width: 220,
