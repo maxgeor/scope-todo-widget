@@ -3,9 +3,10 @@ const { useSyncedState, useWidgetNodeId, usePropertyMenu, useEffect, AutoLayout,
 import { nanoid as createId } from "nanoid/non-secure";
 function TodoWidget() {
     const widgetId = useWidgetNodeId();
-    const [todos, setTodos] = useSyncedState("todos", []); // Legacy
+    const [todos, setTodos] = useSyncedState("todos", []);
     const [title, setTitle] = useSyncedState("title", "");
     const [hasTitle, setHasTitle] = useSyncedState("hasTitle", false);
+    const [widgetSize, setWidgetSize] = useSyncedState('widgetSize', 2);
     useEffect(() => {
         figma.ui.onmessage = ({ type, id, title }) => {
             switch (type) {
@@ -70,6 +71,21 @@ function TodoWidget() {
             itemType: "separator",
         },
         {
+            tooltip: "Make it smaller",
+            propertyName: "shrink",
+            itemType: "action",
+            icon: `<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.25 7.5C2.25 7.22386 2.47386 7 2.75 7H12.25C12.5261 7 12.75 7.22386 12.75 7.5C12.75 7.77614 12.5261 8 12.25 8H2.75C2.47386 8 2.25 7.77614 2.25 7.5Z" fill="#ddd" fill-rule="evenodd" clip-rule="evenodd"></path></svg>`,
+        },
+        {
+            tooltip: "Make it bigger",
+            propertyName: "grow",
+            itemType: "action",
+            icon: `<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2.75C8 2.47386 7.77614 2.25 7.5 2.25C7.22386 2.25 7 2.47386 7 2.75V7H2.75C2.47386 7 2.25 7.22386 2.25 7.5C2.25 7.77614 2.47386 8 2.75 8H7V12.25C7 12.5261 7.22386 12.75 7.5 12.75C7.77614 12.75 8 12.5261 8 12.25V8H12.25C12.5261 8 12.75 7.77614 12.75 7.5C12.75 7.22386 12.5261 7 12.25 7H8V2.75Z" fill="#ddd" fill-rule="evenodd" clip-rule="evenodd"></path></svg>`,
+        },
+        {
+            itemType: "separator",
+        },
+        {
             tooltip: "Clear everything",
             propertyName: "clear-all",
             itemType: "action",
@@ -77,11 +93,18 @@ function TodoWidget() {
         },
     ];
     usePropertyMenu(propertyMenuItems, ({ propertyName }) => {
+        const widget = figma.getNodeById(widgetId);
         switch (propertyName) {
             case "clear-all":
                 setTodos([]);
                 setHasTitle(false);
                 setTitle("");
+                break;
+            case "grow":
+                setWidgetSize(widgetSize * 1.5);
+                break;
+            case "shrink":
+                setWidgetSize(widgetSize / 1.5);
                 break;
             case "add-title":
                 setHasTitle(true);
@@ -95,19 +118,19 @@ function TodoWidget() {
         const { id, done, title, outOfScope } = todo;
         return (figma.widget.h(AutoLayout, { key: id, direction: "horizontal", verticalAlignItems: "start", spacing: "auto", width: "fill-parent" },
             figma.widget.h(AutoLayout, { direction: "horizontal", verticalAlignItems: "start", spacing: 8 },
-                figma.widget.h(SVG, { hidden: done || outOfScope, onClick: () => updateTodo({ id, field: "done" }), src: `
+                figma.widget.h(SVG, { hidden: done || outOfScope, onClick: () => updateTodo({ id, field: "done" }), height: 20 * widgetSize, width: 20 * widgetSize, src: `
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2.5" y="2.5" width="15" height="15" rx="3.5" fill="white" stroke="#aeaeae"/>
               </svg>
             ` }),
-                figma.widget.h(SVG, { hidden: !done || outOfScope, onClick: () => updateTodo({ id, field: "done" }), src: `
+                figma.widget.h(SVG, { hidden: !done || outOfScope, onClick: () => updateTodo({ id, field: "done" }), height: 20 * widgetSize, width: 20 * widgetSize, src: `
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM14.3408 8.74741C14.7536 8.28303 14.7118 7.57195 14.2474 7.15916C13.783 6.74638 13.0719 6.78821 12.6592 7.25259L10.6592 9.50259L9.45183 10.8608L7.7955 9.2045C7.35616 8.76516 6.64384 8.76516 6.2045 9.2045C5.76517 9.64384 5.76517 10.3562 6.2045 10.7955L8.7045 13.2955C8.92359 13.5146 9.22334 13.6336 9.53305 13.6245C9.84275 13.6154 10.135 13.479 10.3408 13.2474L12.3408 10.9974L14.3408 8.74741Z" fill="#4AB393"/>
               </svg>
             ` }),
                 figma.widget.h(Rectangle, { hidden: !outOfScope, fill: "#f2f2f2", width: 20, height: 20 }),
                 figma.widget.h(Input, { fill: outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010", fontSize: done || outOfScope ? 13 : 14, lineHeight: 20, width: 240, value: title, placeholder: "I need to...", placeholderProps: {
-                        fill: '#b7b7b7',
+                        fill: "#b7b7b7",
                         opacity: 1,
                         letterSpacing: -0.15,
                     }, onTextEditEnd: (e) => {
@@ -139,7 +162,7 @@ function TodoWidget() {
     };
     return (figma.widget.h(AutoLayout, { direction: "vertical", cornerRadius: 8, fill: "#fff", width: 380, stroke: "#e7e7e7" },
         hasTitle && (figma.widget.h(AutoLayout, { width: "fill-parent", direction: "vertical", verticalAlignItems: "center", horizontalAlignItems: "center" },
-            figma.widget.h(Input, { value: title, placeholder: "Add a title...", fill: "#222", fontWeight: 700, fontSize: 19.8, lineHeight: 24, horizontalAlignText: "center", width: 290, letterSpacing: -0.15, inputFrameProps: {
+            figma.widget.h(Input, { value: title, placeholder: "Add a title...", fill: "#2A2A2A", fontWeight: 700, fontSize: 19.8, lineHeight: 24, horizontalAlignText: "center", width: 290, letterSpacing: -0.15, inputFrameProps: {
                     fill: "#FFFFFF",
                     horizontalAlignItems: "center",
                     padding: { top: 24 },
