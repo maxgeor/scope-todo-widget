@@ -6,7 +6,7 @@ function TodoWidget() {
     const [todos, setTodos] = useSyncedState("todos", []);
     const [title, setTitle] = useSyncedState("title", "");
     const [hasTitle, setHasTitle] = useSyncedState("hasTitle", false);
-    const [size, setSize] = useSyncedState('size', 2);
+    const [size, setSize] = useSyncedState("size", 1);
     useEffect(() => {
         figma.ui.onmessage = ({ type, id, title }) => {
             switch (type) {
@@ -95,8 +95,7 @@ function TodoWidget() {
     usePropertyMenu(propertyMenuItems, ({ propertyName }) => {
         if (propertyName === 'grow' || propertyName === 'shrink') {
             const newSize = propertyName === "grow" ? size * 1.3 : size / 1.3;
-            setSize(newSize);
-            return;
+            return setSize(newSize);
         }
         switch (propertyName) {
             case "clear-all":

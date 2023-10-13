@@ -41,7 +41,7 @@ function TodoWidget() {
   const [todos, setTodos] = useSyncedState<Todo[]>("todos", []);
   const [title, setTitle] = useSyncedState<string>("title", "");
   const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", false);
-  const [size, setSize] = useSyncedState<number>('size', 2);
+  const [size, setSize] = useSyncedState<number>("size", 1);
 
   useEffect(() => {
     figma.ui.onmessage = ({ type, id, title }) => {
@@ -145,8 +145,7 @@ function TodoWidget() {
   usePropertyMenu(propertyMenuItems, ({ propertyName }) => {
     if (propertyName === 'grow' || propertyName === 'shrink') {
       const newSize = propertyName === "grow" ? size * 1.3 : size / 1.3;
-      setSize(newSize);
-      return;
+      return setSize(newSize);
     }
 
     switch (propertyName) {
@@ -179,17 +178,6 @@ function TodoWidget() {
           verticalAlignItems={"start"}
           spacing={8 * size}
         >
-          {/* <SVG
-            hidden={done || outOfScope}
-            onClick={() => updateTodo({ id, field: "done" })}
-            height={20 * size}
-            width={20 * size}
-            src={`
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2.5" y="2.5" width="15" height="15" rx="3.5" fill="white" stroke="#aeaeae"/>
-              </svg>
-            `}
-          /> */}
           <AutoLayout
             hidden={done || outOfScope}
             height={20 * size}
@@ -288,6 +276,7 @@ function TodoWidget() {
       fill={"#fff"}
       width={380 * size}
       stroke={"#e7e7e7"}
+      strokeWidth={1 * size}
     >
       {hasTitle && (
         <AutoLayout
