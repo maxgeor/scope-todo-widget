@@ -153,7 +153,7 @@ function TodoWidget() {
               </svg>
             ` }))));
     };
-    return (figma.widget.h(AutoLayout, { direction: "vertical", cornerRadius: 8 * size, fill: "#fff", width: 380 * size, stroke: "#e7e7e7" },
+    return (figma.widget.h(AutoLayout, { direction: "vertical", cornerRadius: 8 * size, fill: "#fff", width: 380 * size, stroke: "#e7e7e7", strokeWidth: 1 * size },
         hasTitle && (figma.widget.h(AutoLayout, { width: "fill-parent", direction: "vertical", verticalAlignItems: "center", horizontalAlignItems: "center" },
             figma.widget.h(Input, { value: title, placeholder: "Add a title...", fill: "#2A2A2A", fontWeight: 700, fontSize: 19.8 * size, lineHeight: 24 * size, horizontalAlignText: "center", width: 290 * size, letterSpacing: -0.15 * size, inputFrameProps: {
                     fill: "#FFFFFF",
