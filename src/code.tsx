@@ -41,7 +41,7 @@ function TodoWidget() {
   const [todos, setTodos] = useSyncedState<Todo[]>("todos", []);
   const [title, setTitle] = useSyncedState<string>("title", "");
   const [hasTitle, setHasTitle] = useSyncedState<boolean>("hasTitle", false);
-  const [widgetSize, setWidgetSize] = useSyncedState<number>('widgetSize', 2);
+  const [size, setSize] = useSyncedState<number>('size', 2);
 
   useEffect(() => {
     figma.ui.onmessage = ({ type, id, title }) => {
@@ -143,17 +143,17 @@ function TodoWidget() {
   ];
 
   usePropertyMenu(propertyMenuItems, ({ propertyName }) => {
+    if (propertyName === 'grow' || propertyName === 'shrink') {
+      const newSize = propertyName === "grow" ? size * 1.3 : size / 1.3;
+      setSize(newSize);
+      return;
+    }
+
     switch (propertyName) {
       case "clear-all":
         setTodos([]);
         setHasTitle(false);
         setTitle("");
-        break;
-      case "grow":
-        setWidgetSize(widgetSize * 1.33);
-        break;
-      case "shrink":
-        setWidgetSize(widgetSize / 1.33);
         break;
       case "add-title":
         setHasTitle(true);
@@ -177,13 +177,13 @@ function TodoWidget() {
         <AutoLayout
           direction={"horizontal"}
           verticalAlignItems={"start"}
-          spacing={8 * widgetSize}
+          spacing={8 * size}
         >
           {/* <SVG
             hidden={done || outOfScope}
             onClick={() => updateTodo({ id, field: "done" })}
-            height={20 * widgetSize}
-            width={20 * widgetSize}
+            height={20 * size}
+            width={20 * size}
             src={`
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2.5" y="2.5" width="15" height="15" rx="3.5" fill="white" stroke="#aeaeae"/>
@@ -192,28 +192,28 @@ function TodoWidget() {
           /> */}
           <AutoLayout
             hidden={done || outOfScope}
-            height={20 * widgetSize}
-            width={20 * widgetSize}
+            height={20 * size}
+            width={20 * size}
             verticalAlignItems={"center"}
             horizontalAlignItems={"center"}
-            padding={4 * widgetSize}
+            padding={4 * size}
             onClick={() => updateTodo({ id, field: "done" })}
           >
             <Rectangle
               fill={"#fff"}
               stroke="#aeaeae"
-              strokeWidth={1 * widgetSize}
+              strokeWidth={1 * size}
               strokeAlign="inside"
-              height={16 * widgetSize}
-              width={16 * widgetSize}
-              cornerRadius={4 * widgetSize}
+              height={16 * size}
+              width={16 * size}
+              cornerRadius={4 * size}
             />
           </AutoLayout>
           <SVG
             hidden={!done || outOfScope}
             onClick={() => updateTodo({ id, field: "done" })}
-            height={20 * widgetSize}
-            width={20 * widgetSize}
+            height={20 * size}
+            width={20 * size}
             src={`
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C3.79086 2 2 3.79086 2 6V14C2 16.2091 3.79086 18 6 18H14C16.2091 18 18 16.2091 18 14V6C18 3.79086 16.2091 2 14 2H6ZM14.3408 8.74741C14.7536 8.28303 14.7118 7.57195 14.2474 7.15916C13.783 6.74638 13.0719 6.78821 12.6592 7.25259L10.6592 9.50259L9.45183 10.8608L7.7955 9.2045C7.35616 8.76516 6.64384 8.76516 6.2045 9.2045C5.76517 9.64384 5.76517 10.3562 6.2045 10.7955L8.7045 13.2955C8.92359 13.5146 9.22334 13.6336 9.53305 13.6245C9.84275 13.6154 10.135 13.479 10.3408 13.2474L12.3408 10.9974L14.3408 8.74741Z" fill="#4AB393"/>
@@ -223,14 +223,14 @@ function TodoWidget() {
           <Rectangle
             hidden={!outOfScope}
             fill={"#f2f2f2"}
-            width={20 * widgetSize}
-            height={20 * widgetSize}
+            width={20 * size}
+            height={20 * size}
           />
           <Input
             fill={outOfScope ? "#6E6E6E" : done ? "#767676" : "#101010"}
-            fontSize={(done || outOfScope ? 13 : 14) * widgetSize}
-            lineHeight={20 * widgetSize}
-            width={240 * widgetSize}
+            fontSize={(done || outOfScope ? 13 : 14) * size}
+            lineHeight={20 * size}
+            width={240 * size}
             value={title}
             placeholder="I need to..."
             placeholderProps={{
@@ -266,8 +266,8 @@ function TodoWidget() {
           }
         >
           <SVG
-            height={20 * widgetSize}
-            width={20 * widgetSize}
+            height={20 * size}
+            width={20 * size}
             src={`
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="1.6" y="8" width="4" height="4" rx="2" fill="#AAAAAA"/>
@@ -284,9 +284,9 @@ function TodoWidget() {
   return (
     <AutoLayout
       direction={"vertical"}
-      cornerRadius={8 * widgetSize}
+      cornerRadius={8 * size}
       fill={"#fff"}
-      width={380 * widgetSize}
+      width={380 * size}
       stroke={"#e7e7e7"}
     >
       {hasTitle && (
@@ -301,15 +301,15 @@ function TodoWidget() {
             placeholder="Add a title..."
             fill="#2A2A2A"
             fontWeight={700}
-            fontSize={19.8 * widgetSize}
-            lineHeight={24 * widgetSize}
+            fontSize={19.8 * size}
+            lineHeight={24 * size}
             horizontalAlignText="center"
-            width={290 * widgetSize}
-            letterSpacing={-0.15 * widgetSize}
+            width={290 * size}
+            letterSpacing={-0.15 * size}
             inputFrameProps={{
               fill: "#FFFFFF",
               horizontalAlignItems: "center",
-              padding: { top: 24 * widgetSize },
+              padding: { top: 24 * size },
               verticalAlignItems: "center",
             }}
             onTextEditEnd={(e: TextEditEvent) => setTitle(e.characters)}
@@ -318,13 +318,13 @@ function TodoWidget() {
       )}
       <AutoLayout
         direction={"vertical"}
-        spacing={24 * widgetSize}
-        padding={24 * widgetSize}
+        spacing={24 * size}
+        padding={24 * size}
         width={"fill-parent"}
       >
         <AutoLayout
           direction={"vertical"}
-          spacing={8 * widgetSize}
+          spacing={8 * size}
           width={"fill-parent"}
         >
           {todos
@@ -342,13 +342,13 @@ function TodoWidget() {
             <AutoLayout
               direction={"horizontal"}
               verticalAlignItems={"center"}
-              spacing={8 * widgetSize}
+              spacing={8 * size}
               fill={"#fff"}
               onClick={() => createTodo(createId())}
             >
               <SVG
-                height={20 * widgetSize}
-                width={20 * widgetSize}
+                height={20 * size}
+                width={20 * size}
                 src={`
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M10.125 5C10.7463 5 11.25 5.44772 11.25 6V14C11.25 14.5523 10.7463 15 10.125 15C9.50368 15 9 14.5523 9 14V6C9 5.44772 9.50368 5 10.125 5Z" fill="#979797"/>
@@ -358,8 +358,8 @@ function TodoWidget() {
               />
               <TextBlock
                 fill={"#949494"}
-                fontSize={14 * widgetSize}
-                lineHeight={20 * widgetSize}
+                fontSize={14 * size}
+                lineHeight={20 * size}
                 fontWeight={700}
                 letterSpacing={"-0.75%"}
               >
@@ -373,7 +373,7 @@ function TodoWidget() {
             !todos.filter(({ done, outOfScope }) => done && !outOfScope).length
           }
           direction={"vertical"}
-          spacing={8 * widgetSize}
+          spacing={8 * size}
           width={"fill-parent"}
         >
           {todos
@@ -394,13 +394,13 @@ function TodoWidget() {
         width={"fill-parent"}
         height={
           !todos.filter(({ outOfScope }) => outOfScope).length
-            ? 40 * widgetSize
+            ? 40 * size
             : "hug-contents"
         }
         direction={"vertical"}
         horizontalAlignItems={"center"}
-        spacing={8 * widgetSize}
-        padding={24 * widgetSize}
+        spacing={8 * size}
+        padding={24 * size}
         fill={"#f2f2f2"}
       >
         {todos
